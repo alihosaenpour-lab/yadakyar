@@ -1,9 +1,0 @@
-FROM python:3.12-slim
-WORKDIR /app
-COPY api/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY api/ /app/
-COPY site/ /app/site/
-ENV YADAKYAR_SITE=/app/site PORT=8000
-EXPOSE 8000
-CMD ["sh","-c","uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
