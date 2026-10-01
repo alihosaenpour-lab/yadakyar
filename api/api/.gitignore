@@ -1,0 +1,7 @@
+yadakyar.db
+yadakyar.db-wal
+yadakyar.db-shm
+.secret
+ADMIN_PASSWORD.txt
+__pycache__/
+*.pyc

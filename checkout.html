@@ -15,7 +15,7 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
 
-<link rel="stylesheet" href="assets/css/app.css?v=13">
+<link rel="stylesheet" href="assets/css/app.css?v=14">
 <style>.ck{display:grid;grid-template-columns:1fr 330px;gap:18px}
 @media(max-width:920px){.ck{grid-template-columns:1fr}}
 .opt{display:flex;gap:10px;align-items:center;border:1px solid var(--bd);border-radius:13px;padding:11px 13px;cursor:pointer;margin-bottom:8px;transition:.2s}
@@ -29,8 +29,9 @@
  <div class="ck"><div class="card pad" id="form"></div>
   <aside class="card pad sum" id="sum" style="align-self:start;position:sticky;top:78px"></aside></div>
 </div></main>
-<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script><script src="assets/js/ui.js?v=13"></script>
-<script src="assets/js/assistant.js?v=13"></script>
+<script src="assets/js/apiclient.js?v=14"></script>
+<script src="assets/js/seed.js?v=14"></script><script src="assets/js/db.js?v=14"></script><script src="assets/js/ui.js?v=14"></script>
+<script src="assets/js/assistant.js?v=14"></script>
 <script>
 mountChrome('cart');
 const S=DB.settings();let step=1;
@@ -89,13 +90,29 @@ function render(){steps();sum();const f=$('#form');
    D.addr=$('#i-addr').value.trim();D.post=$('#i-post').value.trim();D.note=$('#i-note').value.trim();
    if(!D.prov||!D.city||D.addr.length<8){toast('آدرس کامل را وارد کنید',1);return}}
   step++;render()};
- const pl=f.querySelector('#place');if(pl)pl.onclick=()=>{
+ const pl=f.querySelector('#place');if(pl)pl.onclick=async()=>{
   const sh=S.shipping.find(x=>x.id===D.ship),t=DB.cartTotal(),c=shipCost();
-  const o=DB.createOrder({customerId:me?me.id:null,customer:{name:D.name,phone:D.phone,email:D.email},
-   address:{prov:D.prov,city:D.city,addr:D.addr,post:D.post},note:D.note,
-   shipping:{id:sh.id,name:sh.name,price:c},payment:D.pay,
-   subtotal:t,shipCost:c,total:t+c});
-  location.href='order.html?id='+o.id};
+  pl.disabled=true; const lbl=pl.textContent; pl.textContent='در حال ثبت…';
+  try{
+   if(DB.ONLINE&&DB.createOrderRemote){
+    // ثبت واقعی روی سرور — قیمت و موجودی سمت سرور بازبینی می‌شود
+    const r=await DB.createOrderRemote({name:D.name,phone:D.phone,
+      address:[D.prov,D.city,D.addr].filter(Boolean).join('، '),city:D.city,
+      postcode:D.post,note:D.note,shipMethod:D.ship,payMethod:D.pay});
+    if(D.pay==='gateway'||D.pay==='online'){
+      try{const p=await API.payStart(r.code);location.href=p.url;return}
+      catch(e){toast('درگاه پرداخت در دسترس نیست؛ سفارش ثبت شد و با شما تماس می‌گیریم',1)}
+    }
+    location.href='order.html?code='+encodeURIComponent(r.code)+'&phone='+encodeURIComponent(D.phone);
+    return;
+   }
+   const o=DB.createOrder({customerId:me?me.id:null,customer:{name:D.name,phone:D.phone,email:D.email},
+    address:{prov:D.prov,city:D.city,addr:D.addr,post:D.post},note:D.note,
+    shipping:{id:sh.id,name:sh.name,price:c},payment:D.pay,
+    subtotal:t,shipCost:c,total:t+c});
+   location.href='order.html?id='+o.id;
+  }catch(e){ toast(e.message||'ثبت سفارش ناموفق بود',1); pl.disabled=false; pl.textContent=lbl; }
+ };
 }
 render();
 </script></body></html>

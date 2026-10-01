@@ -148,3 +148,91 @@ const DB={
 seedOnce();
 window.DB=DB;
 })();
+
+/* ===== اتصال به بک‌اند واقعی =====
+   وقتی API در دسترس است، عملیات حیاتی (سفارش، ورود، ویرایش قیمت/موجودی)
+   روی سرور انجام می‌شود، نه در localStorage. خواندن کاتالوگ از SEEDِ
+   پرشده توسط apiclient.js انجام می‌شود، پس بقیهٔ صفحات بدون تغییر کار می‌کنند. */
+(function(){
+  if(!window.API) return;
+  const A=window.API, D=window.DB;
+  if(!A.online){ D.ONLINE=false; return; }
+  D.ONLINE=true;
+
+  // کاتالوگِ سرور همیشه جایگزین نسخهٔ ذخیره‌شدهٔ مرورگر شود
+  try{
+    const NSk='yadakyar.v7.';
+    localStorage.setItem(NSk+'products', JSON.stringify(window.SEED.products));
+    localStorage.setItem(NSk+'vehicles', JSON.stringify(window.SEED.vehicles));
+    localStorage.setItem(NSk+'parts',    JSON.stringify(window.SEED.parts));
+    localStorage.setItem(NSk+'categories', JSON.stringify(window.SEED.categories));
+    if(window.API_SETTINGS){
+      const cur=D.settings()||{};
+      D.saveSettings(Object.assign({},cur,{
+        shopName:window.API_SETTINGS.shopName||cur.shopName,
+        freeShipOver:window.API_SETTINGS.freeShipOver??cur.freeShipOver,
+        shipping:window.API_SETTINGS.shipping||cur.shipping}));
+    }
+  }catch(e){ console.warn('cache catalog failed',e); }
+
+  // ---- سفارش واقعی ----
+  const localCreate=D.createOrder.bind(D);
+  D.createOrderRemote=async function(o){
+    const items=(o.items||D.cartDetail().map(x=>({id:x.id,qty:x.qty})))
+      .map(x=>({id:x.id,qty:x.qty}));
+    const r=await A.createOrder({
+      items, name:o.name||'', phone:o.phone||'', address:o.address||'',
+      city:o.city||'', postcode:o.postcode||'', note:o.note||'',
+      shipMethod:o.shipMethod||'post', payMethod:o.payMethod||'cod'});
+    D.clearCart();
+    return r;                       // {code,total,...}
+  };
+
+  // ---- حساب مشتری واقعی ----
+  D.registerRemote = d=>A.register(d);
+  D.loginRemote    = d=>A.login(d);
+  D.myOrdersRemote = ()=>A.myOrders();
+  D.trackRemote    = (c,p)=>A.track(c,p);
+  const _logout=D.logout.bind(D);
+  D.logout=function(){ A.logout(); return _logout(); };
+
+  // ---- مدیر واقعی ----
+  D.adminLoginRemote = (u,p)=>A.adminLogin(u,p);
+  D.isAdminRemote    = ()=>!!A.adminToken();
+  D.statsRemote      = ()=>A.stats();
+  D.adminOrdersRemote= ()=>A.adminOrders();
+  D.patchOrderRemote = (c,d)=>A.patchOrder(c,d);
+  D.auditRemote      = ()=>A.audit();
+  D.customersRemote  = ()=>A.customers();
+
+  // ویرایش محصول: هم سرور هم کش محلی
+  const _upsert=D.upsert.bind(D);
+  D.upsert=function(col,obj){
+    const res=_upsert(col,obj);
+    if(col==='products'&&obj&&obj.id&&A.adminToken()){
+      const d={};
+      ['price','oldPrice','stock','active','img','name'].forEach(k=>{
+        if(obj[k]!==undefined) d[k]=obj[k];
+      });
+      if(Object.keys(d).length)
+        A.patchProduct(obj.id,d).catch(e=>console.warn('sync محصول ناموفق:',e.message));
+    }
+    return res;
+  };
+
+  // تنظیمات فروشگاه روی سرور
+  const _saveSettings=D.saveSettings.bind(D);
+  D.saveSettings=function(s){
+    const r=_saveSettings(s);
+    if(A.adminToken()){
+      const srv={};
+      ['shopName','freeShipOver','shipping','zarinpalMerchant','zarinpalSandbox']
+        .forEach(k=>{ if(s[k]!==undefined) srv[k]=s[k]; });
+      if(Object.keys(srv).length)
+        A.putSettings(srv).catch(e=>console.warn('sync تنظیمات ناموفق:',e.message));
+    }
+    return r;
+  };
+
+  console.info('یدک‌یار: متصل به سرور ✓ ('+window.SEED.products.length+' محصول زنده)');
+})();

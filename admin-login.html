@@ -11,7 +11,7 @@
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
 
-<link rel="stylesheet" href="assets/css/app.css?v=13">
+<link rel="stylesheet" href="assets/css/app.css?v=14">
 <style>
 body{display:grid;place-items:center;min-height:100vh;padding:20px}
 .box{width:100%;max-width:400px;background:#fff;border:1px solid var(--bd);border-radius:26px;padding:34px 30px;box-shadow:var(--sh3);position:relative;overflow:hidden}
@@ -30,14 +30,23 @@ body{display:grid;place-items:center;min-height:100vh;padding:20px}
  <label>رمز عبور</label><input id="p" type="password" placeholder="••••••••">
  <button class="btn wide" style="margin-top:16px" id="go">ورود به پنل</button>
  <a href="home.html"><button class="btn g wide" style="margin-top:8px">بازگشت به سایت</button></a>
- <div class="tiny">نسخهٔ نمایشی — نام کاربری <b style="color:var(--acc2)">admin</b> و رمز <b style="color:var(--acc2)">admin123</b><br>⚠️ این رمز پیش‌فرض است؛ پیش از استفادهٔ واقعی از پنل ← تنظیمات تغییرش دهید.<br>
+ <div class="tiny">در حالت متصل به سرور، رمز هنگام ساخت پایگاه داده تولید می‌شود و در فایل <code>api/ADMIN_PASSWORD.txt</code> است<br>⚠️ این رمز پیش‌فرض است؛ پیش از استفادهٔ واقعی از پنل ← تنظیمات تغییرش دهید.<br>
  (از پنل مدیریت ← تنظیمات قابل تغییر است)</div>
 </div>
 <div class="toast" id="toast"></div>
-<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script><script src="assets/js/ui.js?v=13"></script>
+<script src="assets/js/apiclient.js?v=14"></script>
+<script src="assets/js/seed.js?v=14"></script><script src="assets/js/db.js?v=14"></script><script src="assets/js/ui.js?v=14"></script>
 <script>
 if(DB.isAdmin())location.href='admin.html';
-const go=()=>{if(DB.adminLogin($('#u').value.trim(),$('#p').value)){toast('خوش آمدید ✓');setTimeout(()=>location.href='admin.html',500)}
+const go=async()=>{
+ const u=$('#u').value.trim(), p=$('#p').value;
+ if(DB.ONLINE&&DB.adminLoginRemote){
+  try{ await DB.adminLoginRemote(u,p); DB.adminLogin(u,p);
+       toast('خوش آمدید ✓'); setTimeout(()=>location.href='admin.html',400); }
+  catch(e){ toast(e.message||'ورود ناموفق',1) }
+  return;
+ }
+ if(DB.adminLogin(u,p)){toast('خوش آمدید ✓');setTimeout(()=>location.href='admin.html',500)}
  else toast('نام کاربری یا رمز عبور اشتباه است',1)};
 $('#go').onclick=go;
 $('#p').addEventListener('keydown',e=>{if(e.key==='Enter')go()});

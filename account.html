@@ -15,15 +15,16 @@
 <link rel="manifest" href="site.webmanifest">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
 
-<link rel="stylesheet" href="assets/css/app.css?v=13">
+<link rel="stylesheet" href="assets/css/app.css?v=14">
 <style>.acc{display:grid;grid-template-columns:230px 1fr;gap:18px}
 @media(max-width:860px){.acc{grid-template-columns:1fr}}
 .menu a{display:block;padding:10px 13px;border-radius:12px;font-size:13.5px;color:var(--mut);cursor:pointer}
 .menu a:hover{background:var(--acc-s);color:var(--tx)}.menu a.on{background:var(--acc-s);color:#fff}
 .auth{max-width:420px;margin:0 auto}</style></head><body>
 <main class="wrap"><div class="sect" id="root"></div></main>
-<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script><script src="assets/js/ui.js?v=13"></script>
-<script src="assets/js/assistant.js?v=13"></script>
+<script src="assets/js/apiclient.js?v=14"></script>
+<script src="assets/js/seed.js?v=14"></script><script src="assets/js/db.js?v=14"></script><script src="assets/js/ui.js?v=14"></script>
+<script src="assets/js/assistant.js?v=14"></script>
 <script>
 mountChrome('acc');bindAdd();
 let tab=qs('tab')||'orders';
@@ -42,14 +43,38 @@ function render(){
     <button class="btn wide" style="margin-top:14px" id="go">${mode==='login'?'ورود':'ثبت‌نام'}</button>
     <button class="btn g wide" style="margin-top:8px" id="sw">${mode==='login'?'حساب ندارم، ثبت‌نام می‌کنم':'حساب دارم، وارد می‌شوم'}</button>`;
    $('#sw').onclick=()=>{mode=mode==='login'?'reg':'login';drawF()};
-   $('#go').onclick=()=>{const e=$('#a-email').value.trim(),p=$('#a-pass').value;
+   $('#go').onclick=async()=>{const e=$('#a-email').value.trim(),p=$('#a-pass').value;
+    const ph=($('#a-phone')?$('#a-phone').value.trim():'')||e;
     if(!e||!p){toast('ایمیل و رمز را وارد کنید',1);return}
+    if(DB.ONLINE&&DB.loginRemote){
+     // ورود/ثبت‌نام واقعی روی سرور — شناسه، شمارهٔ موبایل است
+     try{
+      if(mode==='login'){ const r=await DB.loginRemote({phone:ph,password:p});
+        DB.set('session',{id:r.user.id,name:r.user.name,email:r.user.email,phone:r.user.phone});
+        toast('خوش آمدید ✓'); render(); }
+      else{ const n=$('#a-name').value.trim(); if(!n){toast('نام را وارد کنید',1);return}
+        if(p.length<6){toast('رمز باید حداقل ۶ نویسه باشد',1);return}
+        const r=await DB.registerRemote({phone:ph,password:p,name:n,email:e});
+        DB.set('session',{id:r.user.id,name:n,email:e,phone:ph});
+        toast('حساب ساخته شد ✓'); render(); }
+     }catch(err){ toast(err.message||'عملیات ناموفق بود',1) }
+     return;
+    }
     if(mode==='login'){if(DB.login(e,p)){toast('خوش آمدید ✓');render()}else toast('ایمیل یا رمز اشتباه است',1)}
     else{const n=$('#a-name').value.trim();if(!n){toast('نام را وارد کنید',1);return}
      if(DB.register({name:n,phone:$('#a-phone').value.trim(),email:e,pass:p})){toast('حساب ساخته شد ✓');render()}
      else toast('این ایمیل قبلاً ثبت شده',1)}}};
   drawF();return}
- const orders=DB.myOrders();
+ let orders=DB.myOrders();
+ if(DB.ONLINE&&API.token()){
+  try{const x=new XMLHttpRequest();x.open('GET','/api/orders/mine',false);
+   x.setRequestHeader('Authorization','Bearer '+API.token());x.send(null);
+   if(x.status===200){orders=JSON.parse(x.responseText).map(d=>({
+     id:d.code,number:d.code,status:d.status==='pending'?'placed':d.status,
+     createdAt:d.createdAt,items:d.items,total:d.total,
+     _track:'order.html?code='+encodeURIComponent(d.code)+'&phone='+encodeURIComponent(d.phone)}));}
+  }catch(e){console.warn('orders fetch',e)}
+ }
  const T={
   orders:()=>orders.length?`<div class="scroll"><table class="tbl"><thead><tr><th>شماره</th><th>تاریخ</th><th>اقلام</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody>
    ${orders.map(o=>{const s=DB.STATUSES.find(x=>x.id===o.status);

@@ -21,3 +21,8 @@ Thumbs.db
 *.token
 .env
 .env.*
+
+# بک‌اند
+api/yadakyar.db*
+api/.secret
+api/ADMIN_PASSWORD.txt
