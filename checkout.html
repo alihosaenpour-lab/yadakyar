@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>تسویه‌حساب | یدک‌یار</title>
+<meta name="description" content="تسویه‌حساب هفت‌مرحله‌ای یدک‌یار با انتخاب روش ارسال و پرداخت.">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="یدک‌یار">
+<meta property="og:title" content="تسویه‌حساب | یدک‌یار">
+<meta property="og:description" content="تسویه‌حساب هفت‌مرحله‌ای یدک‌یار با انتخاب روش ارسال و پرداخت.">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://example.com/checkout.html">
+<link rel="alternate" hreflang="fa-IR" href="https://example.com/checkout.html">
+<meta property="og:url" content="https://example.com/checkout.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="assets/css/app.css?v=13">
+<style>.ck{display:grid;grid-template-columns:1fr 330px;gap:18px}
+@media(max-width:920px){.ck{grid-template-columns:1fr}}
+.opt{display:flex;gap:10px;align-items:center;border:1px solid var(--bd);border-radius:13px;padding:11px 13px;cursor:pointer;margin-bottom:8px;transition:.2s}
+.opt:hover{border-color:var(--acc)}.opt.on{background:var(--acc-s);border-color:var(--acc)}
+.opt b{font-size:13.5px}.opt .m{margin-right:auto;font-size:13px}
+.sum div{display:flex;justify-content:space-between;padding:5px 0;font-size:13.5px}
+.sum .tot{border-top:1px solid var(--bd);margin-top:8px;padding-top:11px;font-size:17px;font-weight:bold}</style>
+</head><body>
+<main class="wrap"><div class="sect">
+ <div class="steps" id="steps"></div>
+ <div class="ck"><div class="card pad" id="form"></div>
+  <aside class="card pad sum" id="sum" style="align-self:start;position:sticky;top:78px"></aside></div>
+</div></main>
+<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script><script src="assets/js/ui.js?v=13"></script>
+<script src="assets/js/assistant.js?v=13"></script>
+<script>
+mountChrome('cart');
+const S=DB.settings();let step=1;
+const me=DB.me();
+const D={name:me?me.name:'',phone:me?me.phone:'',email:me?me.email:'',
+ prov:'',city:'',addr:'',post:'',ship:S.shipping[0].id,pay:S.payments[0].id,note:''};
+if(!DB.cartDetail().length)location.href='cart.html';
+const NAMES=['اطلاعات مشتری','آدرس تحویل','روش ارسال','پرداخت و تأیید'];
+function steps(){$('#steps').innerHTML=NAMES.map((n,i)=>
+ `<div class="s ${step===i+1?'on':step>i+1?'dn':''}"><i>${step>i+1?'✓':fa(i+1)}</i>${n}</div>${i<3?'<hr>':''}`).join('')}
+function shipCost(){const t=DB.cartTotal();if(t>=S.freeShipOver)return 0;
+ return (S.shipping.find(s=>s.id===D.ship)||S.shipping[0]).price}
+function sum(){const t=DB.cartTotal(),sh=shipCost();
+ $('#sum').innerHTML=`<b style="font-size:15px">خلاصهٔ سفارش</b>
+ ${DB.cartDetail().map(i=>`<div><span style="font-size:12px">${i.name.slice(0,34)}… ×${fa(i.qty)}</span><span>${fa(i.line)}</span></div>`).join('')}
+ <div style="border-top:1px dashed var(--bd);margin-top:6px;padding-top:6px"><span>جمع کالاها</span><span>${fa(t)}</span></div>
+ <div><span>ارسال</span><span>${sh?fa(sh):'<span class="tag t-ok">رایگان</span>'}</span></div>
+ <div class="tot"><span>قابل پرداخت</span><span class="price">${money(t+sh)}</span></div>`}
+function render(){steps();sum();const f=$('#form');
+ if(step===1)f.innerHTML=`<div class="tt"><h3>۱. اطلاعات مشتری</h3></div>
+  <div class="row2"><div><label>نام و نام خانوادگی *</label><input id="i-name" value="${D.name}"></div>
+  <div><label>شمارهٔ موبایل *</label><input id="i-phone" value="${D.phone}" placeholder="09xxxxxxxxx"></div></div>
+  <label>ایمیل (اختیاری)</label><input id="i-email" value="${D.email}">
+  <button class="btn wide" style="margin-top:16px" data-next>ادامه ←</button>
+  ${me?'':'<div class="muted" style="margin-top:10px">حساب کاربری دارید؟ <a href="account.html" style="color:var(--acc2)">وارد شوید</a> تا سفارش در پروفایل‌تان ثبت شود.</div>'}`;
+ if(step===2)f.innerHTML=`<div class="tt"><h3>۲. آدرس تحویل</h3></div>
+  <div class="row2"><div><label>استان *</label><input id="i-prov" value="${D.prov}"></div>
+  <div><label>شهر *</label><input id="i-city" value="${D.city}"></div></div>
+  <label>نشانی کامل *</label><textarea id="i-addr">${D.addr}</textarea>
+  <div class="row2"><div><label>کد پستی</label><input id="i-post" value="${D.post}"></div>
+  <div><label>توضیح سفارش</label><input id="i-note" value="${D.note}"></div></div>
+  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn g" data-back>→ بازگشت</button>
+  <button class="btn" style="flex:1" data-next>ادامه ←</button></div>`;
+ if(step===3)f.innerHTML=`<div class="tt"><h3>۳. روش ارسال</h3></div>
+  ${S.shipping.map(s=>`<div class="opt ${D.ship===s.id?'on':''}" data-ship="${s.id}">
+   <b>${s.name}</b><span class="muted" style="font-size:12px">${s.eta}</span>
+   <span class="m">${DB.cartTotal()>=S.freeShipOver?'<span class="tag t-ok">رایگان</span>':fa(s.price)+' تومان'}</span></div>`).join('')}
+  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn g" data-back>→ بازگشت</button>
+  <button class="btn" style="flex:1" data-next>ادامه ←</button></div>`;
+ if(step===4){const sh=S.shipping.find(x=>x.id===D.ship);
+  f.innerHTML=`<div class="tt"><h3>۴. پرداخت و تأیید نهایی</h3></div>
+  ${S.payments.map(p=>`<div class="opt ${D.pay===p.id?'on':''}" data-pay="${p.id}"><b>${p.name}</b></div>`).join('')}
+  <div class="card pad" style="margin-top:14px;background:var(--soft)">
+   <div style="font-size:13.5px"><b>${D.name}</b> · ${D.phone}</div>
+   <div class="muted" style="font-size:12.5px">${D.prov}، ${D.city} — ${D.addr} ${D.post?'(کدپستی '+D.post+')':''}</div>
+   <div class="muted" style="font-size:12.5px">ارسال: ${sh.name} (${sh.eta})</div></div>
+  <div style="display:flex;gap:8px;margin-top:16px"><button class="btn g" data-back>→ بازگشت</button>
+  <button class="btn ok" style="flex:1" id="place">✅ ثبت نهایی سفارش</button></div>`}
+ f.querySelectorAll('[data-ship]').forEach(o=>o.onclick=()=>{D.ship=o.dataset.ship;render()});
+ f.querySelectorAll('[data-pay]').forEach(o=>o.onclick=()=>{D.pay=o.dataset.pay;render()});
+ const b=f.querySelector('[data-back]');if(b)b.onclick=()=>{step--;render()};
+ const n=f.querySelector('[data-next]');if(n)n.onclick=()=>{
+  if(step===1){D.name=$('#i-name').value.trim();D.phone=$('#i-phone').value.trim();D.email=$('#i-email').value.trim();
+   if(!D.name||D.phone.length<10){toast('نام و شمارهٔ موبایل را درست وارد کنید',1);return}}
+  if(step===2){D.prov=$('#i-prov').value.trim();D.city=$('#i-city').value.trim();
+   D.addr=$('#i-addr').value.trim();D.post=$('#i-post').value.trim();D.note=$('#i-note').value.trim();
+   if(!D.prov||!D.city||D.addr.length<8){toast('آدرس کامل را وارد کنید',1);return}}
+  step++;render()};
+ const pl=f.querySelector('#place');if(pl)pl.onclick=()=>{
+  const sh=S.shipping.find(x=>x.id===D.ship),t=DB.cartTotal(),c=shipCost();
+  const o=DB.createOrder({customerId:me?me.id:null,customer:{name:D.name,phone:D.phone,email:D.email},
+   address:{prov:D.prov,city:D.city,addr:D.addr,post:D.post},note:D.note,
+   shipping:{id:sh.id,name:sh.name,price:c},payment:D.pay,
+   subtotal:t,shipCost:c,total:t+c});
+  location.href='order.html?id='+o.id};
+}
+render();
+</script></body></html>

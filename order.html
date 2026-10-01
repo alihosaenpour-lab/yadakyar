@@ -1,0 +1,61 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>جزئیات سفارش | یدک‌یار</title>
+<meta name="description" content="پیگیری سفارش قطعات خودرو با کد رهگیری در یدک‌یار.">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="یدک‌یار">
+<meta property="og:title" content="جزئیات سفارش | یدک‌یار">
+<meta property="og:description" content="پیگیری سفارش قطعات خودرو با کد رهگیری در یدک‌یار.">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://example.com/order.html">
+<link rel="alternate" hreflang="fa-IR" href="https://example.com/order.html">
+<meta property="og:url" content="https://example.com/order.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="assets/css/app.css?v=13"></head><body>
+<main class="wrap"><div class="sect" id="root"></div></main>
+<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script><script src="assets/js/ui.js?v=13"></script>
+<script src="assets/js/assistant.js?v=13"></script>
+<script>
+mountChrome('acc');
+const o=DB.get('orders',qs('id'));
+if(!o)$('#root').innerHTML='<div class="empty">سفارش یافت نشد.</div>';
+else{
+const flow=['placed','paid','preparing','packed','shipped','delivered'];
+const at=flow.indexOf(o.status);
+$('#root').innerHTML=`
+<div class="card pad" style="text-align:center;margin-bottom:18px">
+ <div style="font-size:42px">✅</div><h2 style="font-size:21px">سفارش شما ثبت شد</h2>
+ <div class="muted">شمارهٔ سفارش: <b style="color:var(--acc2);direction:ltr;display:inline-block">${o.number}</b> · ${dt(o.createdAt)}</div>
+</div>
+<div class="card pad" style="margin-bottom:16px">
+ <div class="tt"><h3>وضعیت سفارش</h3><span class="tag ${(DB.STATUSES.find(s=>s.id===o.status)||{}).color}">${(DB.STATUSES.find(s=>s.id===o.status)||{}).name}</span></div>
+ ${o.status==='canceled'?'<div class="muted">این سفارش لغو شده است.</div>':
+ `<div class="steps">${flow.map((f,i)=>{const s=DB.STATUSES.find(x=>x.id===f);
+   return `<div class="s ${at===i?'on':at>i?'dn':''}"><i>${at>i?'✓':fa(i+1)}</i>${s.name}</div>${i<flow.length-1?'<hr>':''}`}).join('')}</div>`}
+ <div class="muted" style="font-size:12px">آخرین به‌روزرسانی: ${dt(o.history[o.history.length-1].t)}</div>
+</div>
+<div class="card pad" style="margin-bottom:16px"><div class="tt"><h3>اقلام سفارش</h3></div>
+ <div class="scroll"><table class="tbl"><thead><tr><th></th><th>محصول</th><th>کد</th><th>تعداد</th><th>قیمت واحد</th><th>جمع</th></tr></thead>
+ <tbody>${o.items.map(i=>`<tr><td><img alt="تصویر محصول یدک‌یار" src="${i.img}"></td><td><a href="product.html?id=${i.id}">${i.name}</a></td>
+  <td style="direction:ltr">${i.sku}</td><td>${fa(i.qty)}</td><td>${fa(i.price)}</td><td class="price">${fa(i.price*i.qty)}</td></tr>`).join('')}</tbody></table></div>
+</div>
+<div class="row2">
+ <div class="card pad"><div class="tt"><h3>اطلاعات تحویل</h3></div>
+  <div style="font-size:13.5px"><b>${o.customer.name}</b> · ${o.customer.phone}</div>
+  <div class="muted" style="font-size:13px">${o.address.prov}، ${o.address.city}<br>${o.address.addr}<br>${o.address.post?'کد پستی: '+o.address.post:''}</div>
+  <div class="muted" style="font-size:12.5px;margin-top:8px">روش ارسال: ${o.shipping.name}</div>${o.note?`<div class="muted" style="font-size:12.5px">توضیح: ${o.note}</div>`:''}</div>
+ <div class="card pad"><div class="tt"><h3>صورتحساب</h3></div>
+  <div style="display:flex;justify-content:space-between"><span class="muted">جمع کالاها</span><span>${fa(o.subtotal)} تومان</span></div>
+  <div style="display:flex;justify-content:space-between"><span class="muted">هزینهٔ ارسال</span><span>${o.shipCost?fa(o.shipCost)+' تومان':'رایگان'}</span></div>
+  <div style="display:flex;justify-content:space-between;border-top:1px solid var(--bd);margin-top:8px;padding-top:9px;font-size:17px;font-weight:bold">
+   <span>مبلغ کل</span><span class="price">${money(o.total)}</span></div>
+  <div class="muted" style="font-size:12.5px;margin-top:8px">روش پرداخت: ${(DB.settings().payments.find(p=>p.id===o.payment)||{}).name}</div></div>
+</div>
+<div style="display:flex;gap:8px;margin-top:18px"><a href="shop.html"><button class="btn g">ادامهٔ خرید</button></a>
+ <a href="account.html"><button class="btn">مشاهدهٔ همهٔ سفارش‌ها</button></a></div>`;
+}
+</script></body></html>

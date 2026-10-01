@@ -1,0 +1,136 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>محصول | یدک‌یار</title>
+<meta name="description" content="مشخصات کامل قطعه: شمارهٔ فنی، OEM، برند، خودروی سازگار، گارانتی، موجودی و قیمت روز.">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="یدک‌یار">
+<meta property="og:title" content="محصول | یدک‌یار">
+<meta property="og:description" content="مشخصات کامل قطعه: شمارهٔ فنی، OEM، برند، خودروی سازگار، گارانتی، موجودی و قیمت روز.">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://example.com/product.html">
+<link rel="alternate" hreflang="fa-IR" href="https://example.com/product.html">
+<meta property="og:url" content="https://example.com/product.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="assets/css/app.css?v=13">
+<style>
+.pd{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+@media(max-width:920px){.pd{grid-template-columns:1fr}}
+.gal .main{background:var(--soft);border:1px solid var(--bd);border-radius:20px;overflow:hidden;position:relative;cursor:zoom-in}
+.gal .main img{width:100%;transition:transform .35s}
+.gal .main:hover img{transform:scale(1.5)}
+.thumbs{display:flex;gap:8px;margin-top:10px}
+.thumbs img{width:66px;height:50px;object-fit:cover;border-radius:10px;border:1px solid var(--bd);cursor:pointer;opacity:.6}
+.thumbs img.on{opacity:1;border-color:var(--acc)}
+.spec{width:100%;font-size:13px}.spec td{padding:7px 0;border-bottom:1px dashed var(--bd)}
+.spec td:first-child{color:var(--mut);width:42%}
+.qty{display:flex;align-items:center;gap:0;border:1px solid var(--bd);border-radius:11px;overflow:hidden;width:fit-content}
+.qty button{background:var(--soft);border:0;color:var(--tx);width:38px;height:38px;cursor:pointer;font-size:16px}
+.qty input{width:58px;text-align:center;border:0;border-radius:0;background:transparent}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--bd);margin:22px 0 14px;flex-wrap:wrap}
+.tabs button{background:transparent;border:0;color:var(--mut);padding:9px 16px;cursor:pointer;font-family:inherit;font-size:13.5px;border-bottom:2px solid transparent}
+.tabs button.on{color:var(--tx);border-bottom-color:var(--acc)}
+.fitrow{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;background:var(--soft);border:1px solid var(--bd);border-radius:12px;margin-bottom:7px;font-size:13px;align-items:center}
+</style></head><body>
+<main class="wrap"><div class="sect" id="root"></div></main>
+<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script><script src="assets/js/ui.js?v=13"></script>
+<script src="assets/js/assistant.js?v=13"></script>
+<script>
+mountChrome('shop');bindAdd();
+const p=DB.product(qs('id'));
+if(!p){$('#root').innerHTML='<div class="empty">محصول یافت نشد. <a href="shop.html" style="color:var(--acc2)">بازگشت به فروشگاه</a></div>'}
+else{
+const v=DB.vehicle(p.vehicleId),part=DB.part(p.partId),cat=DB.category(p.categoryId);
+const imgs=[...new Set([...(p.images&&p.images.length?p.images:[p.img]), part.imgUrl||('assets/img/part-'+part.img+'.jpg'), v.bay])];
+const rel=DB.products().filter(x=>x.partId===p.partId&&x.id!==p.id).slice(0,5);
+const also=DB.products().filter(x=>x.vehicleId===p.vehicleId&&x.categoryId===p.categoryId&&x.id!==p.id).slice(0,5);
+$('#root').innerHTML=`
+<div class="muted" style="font-size:12.5px;margin-bottom:12px">
+ <a href="home.html">خانه</a> › <a href="shop.html">فروشگاه</a> ›
+ <a href="shop.html?cat=${cat.id}">${cat.name}</a> › <a href="shop.html?part=${part.id}">${part.name}</a> › ${p.name}</div>
+<div class="pd">
+ <div class="gal">
+  <div class="main"><img id="mainImg" src="${p.img}" alt="${p.name}"></div>
+  <div class="thumbs">${imgs.map((s,i)=>`<img alt="تصویر محصول یدک‌یار" src="${s}" class="${i?'':'on'}" data-i="${i}">`).join('')}</div>
+  <div class="card pad" style="margin-top:14px">
+   <div style="font-size:13.5px;margin-bottom:8px">📍 محل این قطعه روی خودرو</div>
+   <a href="vehicles.html?v=${v.id}&part=${part.id}"><button class="btn g wide">مشاهدهٔ محل قطعه در نمای سه‌بعدی ${v.brandFa} ${v.modelFa}</button></a>
+  </div>
+ </div>
+ <div>
+  <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">${gradeTag(p.gradeCode)}
+   <span class="tag t-inf">${cat.name}</span>${p.oemVerified?'<span class="tag t-ok">OEM تأییدشده</span>':''}</div>
+  <h1 style="font-size:23px;line-height:1.5">${p.name}</h1>
+  <div class="muted" style="direction:ltr;text-align:right;margin-bottom:6px">${p.nameEn}</div>
+  <div class="muted" style="font-size:12.5px">برند: <b style="color:var(--acc2)">${p.brand}</b> · کد کالا: <span style="direction:ltr;display:inline-block">${p.sku}</span>
+   · فروش: ${fa(p.sold)} عدد</div>
+  ${(()=>{const ORD=['genuine','oes','quality','economy'],
+    LB={genuine:['اصلی کارخانه','OE'],oes:['OES','OES'],quality:['باکیفیت','AM'],economy:['اقتصادی','ECO']};
+    const sib=DB.products().filter(x=>x.partId===p.partId&&x.vehicleId===p.vehicleId&&x.active!==false)
+      .sort((x,y)=>ORD.indexOf(x.gradeCode)-ORD.indexOf(y.gradeCode));
+    if(sib.length<2)return '';
+    return `<div class="muted" style="font-size:12.5px;margin-top:14px">انتخاب سطح کیفی و برند این قطعه:</div>
+     <div class="varsw">${sib.map(x=>`<a class="${x.id===p.id?'on':''}" href="product.html?id=${x.id}" title="${x.name}">
+       <b>${LB[x.gradeCode]?LB[x.gradeCode][0]:x.grade}</b><s>${x.brand}</s><i>${fa(x.price)}</i>
+       <span class="muted" style="font-size:10.5px">${x.stock>0?'موجود':'ناموجود'} · ${fa(x.warranty)} ماه</span></a>`).join('')}</div>`;})()}
+  <div class="card pad" style="margin:14px 0">
+   ${p.oldPrice?`<div class="old">${fa(p.oldPrice)} تومان</div>`:''}
+   <div class="price" style="font-size:27px">${money(p.price)}</div>
+   <div style="margin:8px 0">${stockTag(p.stock)} <span class="tag t-inf">${p.warranty}</span></div>
+   <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px">
+    <div class="qty"><button id="mi">−</button><input id="q" value="1"><button id="pl">＋</button></div>
+    <button class="btn" id="add" ${p.stock?'':'disabled'}>🛒 افزودن به سبد خرید</button>
+    <button class="btn ok" id="buy" ${p.stock?'':'disabled'}>⚡ خرید فوری</button>
+    <button class="btn g" id="fav">♡ علاقه‌مندی</button>
+   </div>
+   ${p.stock?'':'<div class="muted" style="margin-top:8px">این محصول موقتاً ناموجود است.</div>'}
+  </div>
+  <div class="card pad">
+   <b style="font-size:14px">🚗 سازگار با خودروهای:</b>
+   <div style="margin-top:9px">
+    <div class="fitrow"><span>${v.brandFa} ${v.modelFa}</span>
+     <span class="muted">سال ${fa(p.years[0])} تا ${fa(p.years[1])}</span>
+     <span class="muted">${p.engines.join(' / ')}</span>
+     <a href="vehicles.html?v=${v.id}&part=${part.id}" style="color:var(--acc2);font-size:12px">نمای سه‌بعدی ←</a></div>
+   </div>
+   <div class="muted" style="font-size:11.5px;margin-top:6px">پیش از خرید، کد فنی قطعهٔ فعلی خودرو را با شمارهٔ OEM مقایسه کنید.</div>
+  </div>
+ </div>
+</div>
+<div class="tabs"><button class="on" data-t="spec">مشخصات فنی</button><button data-t="desc">توضیحات</button>
+ <button data-t="oem">شماره فنی و OEM</button><button data-t="ship">ارسال و گارانتی</button></div>
+<div class="card pad" id="tabc"></div>
+${rel.length?`<div class="sect"><div class="tt"><h3>محصولات مشابه (${part.name})</h3></div><div class="pgrid">${rel.map(productCard).join('')}</div></div>`:''}
+${also.length?`<div class="sect"><div class="tt"><h3>پیشنهاد برای ${v.brandFa} ${v.modelFa}</h3></div><div class="pgrid">${also.map(productCard).join('')}</div></div>`:''}`;
+const TAB={
+ spec:()=>`<table class="spec">${Object.entries(p.specs).map(([k,val])=>`<tr><td>${k}</td><td>${val}</td></tr>`).join('')}
+  <tr><td>گارانتی</td><td>${p.warranty}</td></tr><tr><td>وضعیت</td><td>${p.stock?'موجود ('+fa(p.stock)+' عدد)':'ناموجود'}</td></tr></table>`,
+ desc:()=>`<p style="font-size:13.5px">${part.desc}</p><p class="muted" style="margin-top:10px">${p.desc}</p>
+  <p class="muted" style="margin-top:10px">این قطعه بخشی از «${part.system}» خودرو است. برای مشاهدهٔ موقعیت دقیق آن روی موتور، از دکمهٔ «مشاهدهٔ محل قطعه» استفاده کنید.</p>`,
+ oem:()=>p.oem.length?`<table class="spec"><tr><td>شمارهٔ OEM</td><td style="direction:ltr;text-align:right">${p.oem.join('<br>')}</td></tr>
+  <tr><td>کد کالا (SKU)</td><td style="direction:ltr;text-align:right">${p.sku}</td></tr>
+  <tr><td>اعتبارسنجی</td><td>${p.oemVerified?'<span class="tag t-ok">تأییدشده از کاتالوگ سازنده</span>':'<span class="tag t-warn">تأیید نشده</span>'}</td></tr>
+  ${p.source?`<tr><td>منبع</td><td>${p.source}</td></tr>`:''}</table>`
+  :`<div class="muted">شمارهٔ OEM برای این محصول هنوز ثبت نشده است. مدیر می‌تواند آن را از پنل مدیریت اضافه کند.<br>${DB.meta().oemNote||''}</div>`,
+ ship:()=>`<table class="spec">${DB.settings().shipping.map(s=>`<tr><td>${s.name}</td><td>${fa(s.price)} تومان — ${s.eta}</td></tr>`).join('')}
+  <tr><td>ارسال رایگان</td><td>سفارش‌های بالای ${fa(DB.settings().freeShipOver)} تومان</td></tr>
+  <tr><td>گارانتی</td><td>${p.warranty}</td></tr>
+  <tr><td>مرجوعی</td><td>۷ روز — مشروط به عدم نصب و سالم بودن بسته‌بندی</td></tr></table>`};
+function tab(t){$('#tabc').innerHTML=TAB[t]();$$('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t))}
+$$('.tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.t));tab('spec');
+$('.gal .thumbs').onclick=e=>{const i=e.target.closest('[data-i]');if(!i)return;
+ $('#mainImg').src=i.src;$$('.thumbs img').forEach(x=>x.classList.toggle('on',x===i))};
+const qi=$('#q');
+$('#mi').onclick=()=>qi.value=Math.max(1,+en(qi.value)-1);
+$('#pl').onclick=()=>qi.value=Math.min(p.stock,+en(qi.value)+1);
+$('#add').onclick=()=>{const r=DB.addToCart(p.id,+en(qi.value)||1);
+ if(r===true){toast('به سبد خرید اضافه شد ✓');refreshCart()}else toast('موجودی کافی نیست',1)};
+$('#buy').onclick=()=>{if(DB.addToCart(p.id,+en(qi.value)||1)===true)location.href='checkout.html';else toast('موجودی کافی نیست',1)};
+$('#fav').onclick=()=>{const me=DB.me();if(!me){toast('ابتدا وارد شوید',1);return}
+ const f=new Set(me.fav||[]);f.has(p.id)?f.delete(p.id):f.add(p.id);DB.saveMe({fav:[...f]});
+ toast(f.has(p.id)?'به علاقه‌مندی‌ها اضافه شد ♥':'حذف شد')};
+}
+</script></body></html>

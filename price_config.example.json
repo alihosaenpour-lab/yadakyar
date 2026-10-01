@@ -1,0 +1,8 @@
+{
+  "enabled": false,
+  "source_url": "",
+  "interval_minutes": 60,
+  "selector": "",
+  "match": "name",
+  "margin_percent": 0
+}

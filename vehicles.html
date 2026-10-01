@@ -1,0 +1,136 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>نمایشگاه سه‌بعدی خودروها | یدک‌یار</title>
+<meta name="description" content="خودروهای پشتیبانی‌شدهٔ یدک‌یار: جک S5، هیوندای النترا و تویوتا کرولا با نقشهٔ سه‌بعدی محفظهٔ موتور.">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="یدک‌یار">
+<meta property="og:title" content="نمایشگاه سه‌بعدی خودروها | یدک‌یار">
+<meta property="og:description" content="خودروهای پشتیبانی‌شدهٔ یدک‌یار: جک S5، هیوندای النترا و تویوتا کرولا با نقشهٔ سه‌بعدی محفظهٔ موتور.">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://example.com/vehicles.html">
+<link rel="alternate" hreflang="fa-IR" href="https://example.com/vehicles.html">
+<meta property="og:url" content="https://example.com/vehicles.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="assets/css/app.css?v=13">
+<style>
+.pick{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.pick button{background:var(--panel);border:1px solid var(--bd);color:var(--tx);padding:9px 16px;border-radius:999px;cursor:pointer;font-family:inherit;font-size:13px;transition:.22s;display:flex;align-items:center;gap:9px}
+.pick button img{width:36px;height:26px;object-fit:cover;border-radius:6px}
+.pick button:hover{border-color:var(--acc);transform:translateY(-2px)}
+.pick button.on{background:linear-gradient(135deg,var(--acc),#6366f1);border-color:transparent;box-shadow:0 8px 22px var(--acc-s)}
+.split{display:grid;grid-template-columns:1.35fr .9fr;gap:18px}
+@media(max-width:1060px){.split{grid-template-columns:1fr}}
+.plist{display:flex;flex-direction:column;gap:7px;max-height:430px;overflow:auto;padding-left:5px}
+.pitem{display:flex;gap:10px;align-items:center;background:var(--soft);border:1px solid var(--bd);border-radius:13px;padding:8px 10px;cursor:pointer;transition:.2s}
+.pitem:hover{border-color:var(--acc);transform:translateX(-4px)}
+.pitem.on{background:var(--acc-s);border-color:var(--acc)}
+.pitem img{width:42px;height:32px;object-fit:cover;border-radius:8px}
+.pitem .n{font-size:12.5px}.pitem .c{font-size:10.5px;color:var(--mut)}
+.pitem i{margin-right:auto;font-style:normal;font-size:11px;color:var(--acc2)}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12.5px;margin-top:10px}
+.specs div{background:var(--soft);border:1px solid var(--bd);border-radius:11px;padding:7px 11px}
+.specs b{color:var(--mut);font-weight:400;font-size:11px;display:block}
+</style></head><body>
+<main class="wrap">
+ <div class="sect" style="padding-bottom:12px">
+  <div class="tt"><div><h3>نمایشگاه سه‌بعدی خودرو</h3>
+   <div class="sub">خودرو را بچرخانید، زوم کنید، کاپوت را باز کنید و روی نقاط آبی روی موتور کلیک کنید.</div></div></div>
+  <div class="pick" id="pick"></div>
+ </div>
+ <div class="split">
+  <div>
+   <div id="viewer"></div>
+   <div class="card pad" style="margin-top:14px">
+    <div class="tt" style="margin-bottom:8px"><h3 id="bayTitle">نقشهٔ موتورخانه</h3><span class="muted">روی شماره‌ها کلیک کنید</span></div>
+    <div id="bay"></div>
+    <div class="specs" id="specs"></div>
+   </div>
+  </div>
+  <aside>
+   <div class="card pad">
+    <div class="tt" style="margin-bottom:10px"><h3>قطعات این خودرو</h3></div>
+    <input id="pf" placeholder="جستجو در قطعات…" style="margin-bottom:10px">
+    <div class="plist" id="plist"></div>
+   </div>
+   <div class="card pad" style="margin-top:14px" id="detail">
+    <div class="empty">یک قطعه را از نقشه یا لیست انتخاب کنید.</div>
+   </div>
+  </aside>
+ </div>
+ <section class="sect" id="prodSec" style="display:none">
+  <div class="tt"><h3 id="prodTitle">محصولات سازگار</h3><a id="allLink" class="muted">همهٔ نتایج ←</a></div>
+  <div class="pgrid" id="prods"></div>
+ </section>
+</main>
+<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script>
+<script src="assets/js/ui.js?v=13"></script>
+<script src="assets/js/assistant.js?v=13"></script><script src="assets/js/viewer.js?v=13"></script>
+<script>
+mountChrome('veh');bindAdd();
+const vs=DB.vehicles();let cur=DB.vehicle(qs('v'))||vs[0],curPart=qs('part')||null;
+$('#pick').innerHTML=vs.map(v=>`<button data-v="${v.id}" class="${v.id===cur.id?'on':''}">
+ <img src="${v.image}" alt="">${v.brandFa} ${v.modelFa}</button>`).join('');
+$('#pick').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;
+ cur=DB.vehicle(b.dataset.v);curPart=null;history.replaceState({},'','vehicles.html?v='+cur.id);draw()};
+function draw(){
+ $$('#pick button').forEach(b=>b.classList.toggle('on',b.dataset.v===cur.id));
+ Viewer($('#viewer'),cur,{explore:false,onOpen:()=>toast('کاپوت باز شد — قطعات را در نقشهٔ پایین ببینید')});
+ BayPanel($('#bay'),cur,pick);
+ $('#bayTitle').textContent='نقشهٔ موتورخانهٔ '+cur.brandFa+' '+cur.modelFa;
+ $('#specs').innerHTML=[['برند',cur.brandFa+' ('+cur.brand+')'],['مدل',cur.modelFa],
+  ['سال‌های تولید',fa(cur.years[0])+' تا '+fa(cur.years[cur.years.length-1])],['موتور',cur.engines.join('، ')],
+  ['نوع بدنه',cur.body],['بازار',cur.origin+(cur.note?' — '+cur.note:'')]]
+  .map(s=>`<div><b>${s[0]}</b>${s[1]}</div>`).join('');
+ drawList();
+ if(curPart)pick(curPart);else $('#detail').innerHTML='<div class="empty">یک قطعه را از نقشه یا لیست انتخاب کنید.</div>';
+}
+function drawList(){
+ const q=$('#pf').value.trim();
+ const ids=[...new Set(DB.productsFor(cur.id).map(p=>p.partId))];
+ const items=ids.map(DB.part.bind(DB)).filter(p=>p&&(!q||p.name.includes(q)||p.nameEn.toLowerCase().includes(q.toLowerCase())));
+ $('#plist').innerHTML=items.map(p=>{const n=DB.productsFor(cur.id,p.id).length;
+  return `<div class="pitem ${p.id===curPart?'on':''}" data-p="${p.id}"><img src="${p.imgUrl||("assets/img/part-"+p.img+".jpg")}" alt="">
+  <span><div class="n">${p.name}</div><div class="c">${DB.category(p.categoryId).name}</div></span><i>${fa(n)} محصول</i></div>`}).join('')
+  ||'<div class="empty">قطعه‌ای یافت نشد</div>';
+}
+$('#pf').oninput=drawList;
+$('#plist').onclick=e=>{const it=e.target.closest('[data-p]');if(it)pick(it.dataset.p)};
+function pick(partId){
+ curPart=partId;const p=DB.part(partId);if(!p)return;
+ $$('#plist .pitem').forEach(x=>x.classList.toggle('on',x.dataset.p===partId));
+ $$('#bay .hs').forEach(x=>x.classList.toggle('on',x.dataset.part===partId));
+ const list=DB.productsFor(cur.id,partId);
+ const oem=[...new Set(list.flatMap(x=>x.oem||[]))];
+ const ver=list.some(x=>x.oemVerified);
+ const src=(list.find(x=>x.source)||{}).source;
+ const min=list.length?Math.min(...list.map(x=>x.price)):0;
+ $('#detail').innerHTML=`
+  <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px">
+   <img alt="تصویر محصول یدک‌یار" src="${p.imgUrl||("assets/img/part-"+p.img+".jpg")}" style="width:88px;height:66px;object-fit:cover;border-radius:12px;border:1px solid var(--bd)">
+   <div><div style="font-size:16px;font-weight:bold">${p.name}</div>
+   <div class="muted" style="direction:ltr;text-align:right">${p.nameEn}</div>
+   <div style="margin-top:4px">${gradeTag('')} <span class="tag t-inf">${DB.category(p.categoryId).name}</span></div></div></div>
+  <p class="muted" style="font-size:12.5px">${p.desc}</p>
+  <div class="specs" style="grid-template-columns:1fr">
+   <div><b>سیستم خودرو</b>${p.system}</div>
+   <div><b>شمارهٔ OEM</b>${oem.length?`<span style="direction:ltr;display:inline-block">${oem.join(' · ')}</span> ${ver?'<span class="tag t-ok">تأییدشده</span>':''}`:'<span class="muted">ثبت نشده — توسط مدیر تکمیل شود</span>'}</div>
+   ${src?`<div><b>منبع شمارهٔ فنی</b>${src}</div>`:''}
+   <div><b>خودروی سازگار</b>${cur.brandFa} ${cur.modelFa} (${fa(cur.years[0])}–${fa(cur.years[cur.years.length-1])})</div>
+   <div><b>شروع قیمت</b><span class="price">${money(min)}</span></div>
+  </div>
+  <div style="display:flex;gap:8px;margin-top:12px">
+   <a style="flex:1" href="shop.html?v=${cur.id}&part=${p.id}"><button class="btn wide">🛒 مشاهدهٔ ${fa(list.length)} محصول سازگار</button></a>
+  </div>`;
+ const sec=$('#prodSec');sec.style.display='block';
+ $('#prodTitle').textContent=`محصولات ${p.name} سازگار با ${cur.brandFa} ${cur.modelFa}`;
+ $('#allLink').href=`shop.html?v=${cur.id}&part=${p.id}`;
+ $('#prods').innerHTML=list.map(productCard).join('')||'<div class="empty">محصولی ثبت نشده</div>';
+ sec.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+draw();
+</script></body></html>

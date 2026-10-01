@@ -1,0 +1,43 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON, XML and JavaScript
+        run: |
+          python3 -c "import json,glob; [json.load(open(f,encoding='utf-8')) for f in glob.glob('assets/data/*.json')+['site.webmanifest']]; print('JSON OK')"
+          python3 -c "import xml.dom.minidom as m; m.parse('sitemap.xml'); print('sitemap OK')"
+          for f in assets/js/*.js; do node --check "$f" || exit 1; done
+          echo "JS OK"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>سبد خرید | یدک‌یار</title>
+<meta name="description" content="سبد خرید یدک‌یار — بازبینی قطعات انتخابی و محاسبهٔ هزینهٔ ارسال.">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="یدک‌یار">
+<meta property="og:title" content="سبد خرید | یدک‌یار">
+<meta property="og:description" content="سبد خرید یدک‌یار — بازبینی قطعات انتخابی و محاسبهٔ هزینهٔ ارسال.">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://example.com/cart.html">
+<link rel="alternate" hreflang="fa-IR" href="https://example.com/cart.html">
+<meta property="og:url" content="https://example.com/cart.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="assets/css/app.css?v=13">
+<style>.ct{display:grid;grid-template-columns:1fr 330px;gap:18px}
+@media(max-width:920px){.ct{grid-template-columns:1fr}}
+.ci{display:grid;grid-template-columns:78px 1fr auto;gap:12px;align-items:center;padding:12px;border-bottom:1px solid var(--bd)}
+.ci img{width:78px;height:60px;object-fit:cover;border-radius:12px}
+.qty{display:flex;border:1px solid var(--bd);border-radius:10px;overflow:hidden;width:fit-content}
+.qty button{background:var(--soft);border:0;color:var(--tx);width:32px;height:32px;cursor:pointer}
+.qty span{width:44px;display:grid;place-items:center;font-size:13px}
+.sum div{display:flex;justify-content:space-between;padding:6px 0;font-size:13.5px}
+.sum .tot{border-top:1px solid var(--bd);margin-top:8px;padding-top:12px;font-size:17px;font-weight:bold}</style>
+</head><body>
+<main class="wrap"><div class="sect">
+ <div class="tt"><h3>سبد خرید</h3><a href="shop.html" class="muted">ادامهٔ خرید ←</a></div>
+ <div class="ct"><div class="card" id="items"></div>
+  <aside class="card pad sum" id="sum" style="align-self:start;position:sticky;top:78px"></aside></div>
+</div></main>
+<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script><script src="assets/js/ui.js?v=13"></script>
+<script src="assets/js/assistant.js?v=13"></script>
+<script>
+mountChrome('cart');
+function draw(){
+ const it=DB.cartDetail();
+ $('#items').innerHTML=it.length?it.map(i=>`<div class="ci" data-id="${i.id}">
+  <a href="product.html?id=${i.id}"><img src="${i.img}" alt=""></a>
+  <div><a href="product.html?id=${i.id}"><b style="font-size:13.5px">${i.name}</b></a>
+   <div class="muted" style="font-size:11.5px">${i.brand} · کد ${i.sku}</div>
+   <div class="muted" style="font-size:11.5px">قیمت واحد: ${fa(i.price)} تومان</div>
+   <div style="margin-top:7px" class="qty"><button data-m="-1">−</button><span>${fa(i.qty)}</span><button data-m="1">＋</button></div></div>
+  <div style="text-align:left"><div class="price">${money(i.line)}</div>
+   <button class="btn g sm" data-del style="margin-top:8px">🗑 حذف</button></div></div>`).join('')
+  :'<div class="empty">سبد خرید شما خالی است.<br><a href="shop.html" style="color:var(--acc2)">رفتن به فروشگاه</a></div>';
+ const t=DB.cartTotal(),s=DB.settings();
+ const ship=t>=s.freeShipOver?0:(s.shipping[0].price);
+ $('#sum').innerHTML=it.length?`<b style="font-size:15px">خلاصهٔ سفارش</b>
+  <div><span>تعداد اقلام</span><span>${fa(it.reduce((a,b)=>a+b.qty,0))} عدد</span></div>
+  <div><span>جمع کالاها</span><span>${fa(t)} تومان</span></div>
+  <div><span>هزینهٔ ارسال (تخمینی)</span><span>${ship?fa(ship)+' تومان':'<span class="tag t-ok">رایگان</span>'}</span></div>
+  <div class="tot"><span>مبلغ قابل پرداخت</span><span class="price">${money(t+ship)}</span></div>
+  <a href="checkout.html"><button class="btn wide" style="margin-top:14px">ادامه و تسویه‌حساب ←</button></a>
+  <button class="btn g wide" id="clr" style="margin-top:8px">خالی کردن سبد</button>
+  <div class="muted" style="font-size:11.5px;margin-top:10px">با سفارش بالای ${fa(s.freeShipOver)} تومان ارسال رایگان می‌شود.</div>`
+  :'<div class="muted">برای دیدن خلاصهٔ سفارش، محصولی به سبد اضافه کنید.</div>';
+ refreshCart();
+ const c=$('#clr');if(c)c.onclick=()=>{if(confirm('سبد خرید خالی شود؟')){DB.clearCart();draw();toast('سبد خالی شد')}};
+}
+$('#items').addEventListener('click',e=>{const row=e.target.closest('[data-id]');if(!row)return;
+ const id=row.dataset.id,cur=DB.cart().find(x=>x.id===id).qty;
+ if(e.target.closest('[data-del]')){DB.setQty(id,0);toast('حذف شد');draw();return}
+ const m=e.target.closest('[data-m]');if(!m)return;
+ const nq=cur+ +m.dataset.m;
+ if(nq>DB.product(id).stock){toast('بیش از موجودی انبار',1);return}
+ DB.setQty(id,nq);draw()});
+draw();
+</script></body></html>

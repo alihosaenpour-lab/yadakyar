@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>حساب کاربری | یدک‌یار</title>
+<meta name="description" content="حساب کاربری یدک‌یار: سفارش‌ها، خودروهای من و اطلاعات تماس.">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="یدک‌یار">
+<meta property="og:title" content="حساب کاربری | یدک‌یار">
+<meta property="og:description" content="حساب کاربری یدک‌یار: سفارش‌ها، خودروهای من و اطلاعات تماس.">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://example.com/account.html">
+<link rel="alternate" hreflang="fa-IR" href="https://example.com/account.html">
+<meta property="og:url" content="https://example.com/account.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="assets/css/app.css?v=13">
+<style>.acc{display:grid;grid-template-columns:230px 1fr;gap:18px}
+@media(max-width:860px){.acc{grid-template-columns:1fr}}
+.menu a{display:block;padding:10px 13px;border-radius:12px;font-size:13.5px;color:var(--mut);cursor:pointer}
+.menu a:hover{background:var(--acc-s);color:var(--tx)}.menu a.on{background:var(--acc-s);color:#fff}
+.auth{max-width:420px;margin:0 auto}</style></head><body>
+<main class="wrap"><div class="sect" id="root"></div></main>
+<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script><script src="assets/js/ui.js?v=13"></script>
+<script src="assets/js/assistant.js?v=13"></script>
+<script>
+mountChrome('acc');bindAdd();
+let tab=qs('tab')||'orders';
+function render(){
+ const me=DB.me();
+ if(!me){$('#root').innerHTML=`<div class="card pad auth">
+  <div class="tt"><h3 id="ttl">ورود به حساب کاربری</h3></div>
+  <div id="fm"></div>
+  <div class="muted" style="text-align:center;margin-top:14px;font-size:12.5px">
+   شما مدیر هستید؟ <a href="admin-login.html" style="color:var(--acc2)">ورود از پنل مدیریت</a></div></div>`;
+  let mode='login';
+  const drawF=()=>{$('#ttl').textContent=mode==='login'?'ورود به حساب کاربری':'ساخت حساب جدید';
+   $('#fm').innerHTML=(mode==='reg'?`<label>نام و نام خانوادگی</label><input id="a-name">
+    <label>شمارهٔ موبایل</label><input id="a-phone">`:'')+
+    `<label>ایمیل</label><input id="a-email" type="email"><label>رمز عبور</label><input id="a-pass" type="password">
+    <button class="btn wide" style="margin-top:14px" id="go">${mode==='login'?'ورود':'ثبت‌نام'}</button>
+    <button class="btn g wide" style="margin-top:8px" id="sw">${mode==='login'?'حساب ندارم، ثبت‌نام می‌کنم':'حساب دارم، وارد می‌شوم'}</button>`;
+   $('#sw').onclick=()=>{mode=mode==='login'?'reg':'login';drawF()};
+   $('#go').onclick=()=>{const e=$('#a-email').value.trim(),p=$('#a-pass').value;
+    if(!e||!p){toast('ایمیل و رمز را وارد کنید',1);return}
+    if(mode==='login'){if(DB.login(e,p)){toast('خوش آمدید ✓');render()}else toast('ایمیل یا رمز اشتباه است',1)}
+    else{const n=$('#a-name').value.trim();if(!n){toast('نام را وارد کنید',1);return}
+     if(DB.register({name:n,phone:$('#a-phone').value.trim(),email:e,pass:p})){toast('حساب ساخته شد ✓');render()}
+     else toast('این ایمیل قبلاً ثبت شده',1)}}};
+  drawF();return}
+ const orders=DB.myOrders();
+ const T={
+  orders:()=>orders.length?`<div class="scroll"><table class="tbl"><thead><tr><th>شماره</th><th>تاریخ</th><th>اقلام</th><th>مبلغ</th><th>وضعیت</th><th></th></tr></thead><tbody>
+   ${orders.map(o=>{const s=DB.STATUSES.find(x=>x.id===o.status);
+    return `<tr><td style="direction:ltr">${o.number}</td><td>${new Date(o.createdAt).toLocaleDateString('fa-IR')}</td>
+    <td>${fa(o.items.length)} قلم</td><td class="price">${fa(o.total)}</td>
+    <td><span class="tag ${s.color}">${s.name}</span></td>
+    <td><a href="order.html?id=${o.id}"><button class="btn g sm">جزئیات و پیگیری</button></a></td></tr>`}).join('')}
+   </tbody></table></div>`:'<div class="empty">هنوز سفارشی ثبت نکرده‌اید.<br><a href="shop.html" style="color:var(--acc2)">شروع خرید</a></div>',
+  profile:()=>`<div class="row2"><div><label>نام</label><input id="p-name" value="${me.name||''}"></div>
+   <div><label>موبایل</label><input id="p-phone" value="${me.phone||''}"></div></div>
+   <label>ایمیل</label><input value="${me.email}" disabled>
+   <label>رمز عبور جدید (خالی = بدون تغییر)</label><input id="p-pass" type="password">
+   <button class="btn" style="margin-top:14px" id="sv">ذخیرهٔ تغییرات</button>`,
+  addr:()=>`${(me.addresses||[]).map((a,i)=>`<div class="card pad" style="margin-bottom:9px;background:var(--soft)">
+    <b style="font-size:13.5px">${a.title}</b><div class="muted" style="font-size:12.5px">${a.prov}، ${a.city} — ${a.addr}</div>
+    <button class="btn g sm" data-da="${i}" style="margin-top:7px">حذف</button></div>`).join('')||'<div class="muted">آدرسی ثبت نشده.</div>'}
+   <div class="card pad" style="margin-top:12px"><b style="font-size:13.5px">افزودن آدرس</b>
+   <div class="row2"><div><label>عنوان</label><input id="n-t" placeholder="خانه / محل کار"></div>
+   <div><label>استان</label><input id="n-p"></div></div>
+   <div class="row2"><div><label>شهر</label><input id="n-c"></div><div><label>کد پستی</label><input id="n-z"></div></div>
+   <label>نشانی</label><textarea id="n-a"></textarea>
+   <button class="btn" style="margin-top:10px" id="adda">افزودن</button></div>`,
+  fav:()=>{const f=(me.fav||[]).map(DB.product.bind(DB)).filter(Boolean);
+   return f.length?`<div class="pgrid">${f.map(productCard).join('')}</div>`:'<div class="empty">لیست علاقه‌مندی خالی است.</div>'}};
+ const M=[['orders','🧾 سفارش‌های من'],['profile','👤 پروفایل'],['addr','📍 آدرس‌ها'],['fav','♥ علاقه‌مندی‌ها']];
+ $('#root').innerHTML=`<div class="tt"><h3>سلام ${me.name} 👋</h3><button class="btn g sm" id="out">خروج از حساب</button></div>
+ <div class="acc"><aside class="card pad menu">${M.map(m=>`<a data-t="${m[0]}" class="${tab===m[0]?'on':''}">${m[1]}</a>`).join('')}
+  <div class="muted" style="font-size:11.5px;margin-top:12px;padding:0 4px">${fa(orders.length)} سفارش ثبت‌شده</div></aside>
+  <section class="card pad">${T[tab]()}</section></div>`;
+ $('#out').onclick=()=>{DB.logout();toast('خارج شدید');render()};
+ $$('.menu a').forEach(a=>a.onclick=()=>{tab=a.dataset.t;render()});
+ const sv=$('#sv');if(sv)sv.onclick=()=>{const p={name:$('#p-name').value.trim(),phone:$('#p-phone').value.trim()};
+  if($('#p-pass').value)p.pass=$('#p-pass').value;DB.saveMe(p);toast('ذخیره شد ✓');render()};
+ const ad=$('#adda');if(ad)ad.onclick=()=>{const a={title:$('#n-t').value.trim()||'آدرس',prov:$('#n-p').value.trim(),
+   city:$('#n-c').value.trim(),post:$('#n-z').value.trim(),addr:$('#n-a').value.trim()};
+  if(!a.addr){toast('نشانی را وارد کنید',1);return}
+  DB.saveMe({addresses:[...(me.addresses||[]),a]});toast('آدرس اضافه شد ✓');render()};
+ $$('[data-da]').forEach(b=>b.onclick=()=>{const a=[...me.addresses];a.splice(+b.dataset.da,1);
+  DB.saveMe({addresses:a});render()});
+}
+render();
+</script></body></html>

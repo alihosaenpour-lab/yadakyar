@@ -1,0 +1,463 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>پنل مدیریت | یدک‌یار</title>
+<meta name="description" content="پنل مدیریت یدک‌یار: محصولات، قیمت‌ها، تصاویر، سفارش‌ها و تنظیمات.">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="یدک‌یار">
+<meta property="og:title" content="پنل مدیریت | یدک‌یار">
+<meta property="og:description" content="پنل مدیریت یدک‌یار: محصولات، قیمت‌ها، تصاویر، سفارش‌ها و تنظیمات.">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="assets/css/app.css?v=13">
+<style>
+body{display:grid;grid-template-columns:262px 1fr;min-height:100vh;background:var(--bg)}
+@media(max-width:920px){body{grid-template-columns:1fr}.sb{position:static!important;height:auto!important}}
+.sb{background:var(--nav);border-left:1px solid #16345f;padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+.sb .lg{display:flex;align-items:center;gap:9px;margin-bottom:18px}
+.sb .lg b{font-size:16px;color:#fff;font-weight:700}
+.sb .lg .mini{color:#8fb0da}
+.sb a{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:12px;font-size:13.5px;color:var(--mut);cursor:pointer;margin-bottom:3px}
+.sb a:hover{background:var(--acc-s);color:var(--tx)}
+.sb a.on{background:linear-gradient(135deg,var(--acc-s),rgba(99,102,241,.2));color:#fff}
+.main{padding:26px 24px;overflow:auto}
+.hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.imgbox{display:flex;gap:9px;flex-wrap:wrap;margin-top:8px}
+.imgbox .it{position:relative;width:92px}
+.imgbox img{width:92px;height:70px;object-fit:cover;border-radius:11px;border:2px solid var(--bd)}
+.imgbox .it.main img{border-color:var(--ok)}
+.imgbox .it b{position:absolute;top:3px;right:3px;background:var(--ok);color:#04231a;font-size:9.5px;padding:1px 6px;border-radius:6px}
+.imgbox .it .rm{position:absolute;bottom:3px;left:3px;background:rgba(190,30,30,.9);border:0;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:11px}
+.drop{border:2px dashed var(--bd2);border-radius:var(--r);padding:22px;text-align:center;color:var(--mut);font-size:14px;cursor:pointer;transition:.2s;background:var(--soft)}
+.drop:hover{border-color:var(--acc);background:var(--acc-s);color:var(--acc)}
+.bar{height:9px;background:var(--soft);border-radius:6px;overflow:hidden;border:1px solid var(--bd)}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:6px}
+.mini{font-size:12.5px;color:var(--mut)}
+.inl{background:var(--ok-s);border:1px dashed transparent;padding:4px 10px;border-radius:8px;cursor:pointer;color:var(--ok);font-weight:700;direction:ltr;display:inline-block}
+.inl:hover{border-color:var(--ok);background:#d6f0e6}
+.hsedit{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--bd)}
+.hsedit img{width:100%;display:block}
+.hsedit .pt{position:absolute;width:24px;height:24px;margin:-12px;border-radius:50%;background:var(--acc);border:2px solid #fff;color:#fff;display:grid;place-items:center;font-size:11px;cursor:move}
+</style></head><body>
+<aside class="sb">
+ <div class="lg"><span style="font-size:20px">⚙️</span><span><b>یدک‌یار</b><div class="mini">پنل مدیریت</div></span></div>
+ <nav id="nav"></nav>
+ <a href="home.html" style="margin-top:16px;border:1px solid rgba(255,255,255,.18)">🌐 مشاهدهٔ سایت</a>
+ <a id="out" style="color:var(--bad)">🚪 خروج</a>
+</aside>
+<main class="main" id="main"></main>
+<div class="toast" id="toast"></div>
+<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script><script src="assets/js/ui.js?v=13"></script>
+<script>
+if(!DB.isAdmin())location.href='admin-login.html';
+const PAGES=[['dash','📊 داشبورد'],['products','📦 مدیریت محصولات'],['images','🖼️ مدیریت تصاویر'],
+ ['prices','💰 مدیریت قیمت‌ها'],['orders','🧾 سفارش‌ها'],['customers','👥 مشتریان'],
+ ['vehicles','🚗 خودروهای سه‌بعدی'],['cats','🗂️ دسته‌بندی‌ها'],['settings','⚙️ تنظیمات']];
+let page=location.hash.replace('#','')||'dash';
+$('#nav').innerHTML=PAGES.map(p=>`<a data-p="${p[0]}" class="${page===p[0]?'on':''}">${p[1]}</a>`).join('');
+$('#nav').onclick=e=>{const a=e.target.closest('[data-p]');if(!a)return;page=a.dataset.p;location.hash=page;
+ $$('#nav a').forEach(x=>x.classList.toggle('on',x.dataset.p===page));render()};
+$('#out').onclick=()=>{DB.adminLogout();location.href='admin-login.html'};
+const M=$('#main');
+const img2b64=(f)=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)});
+function imgsOf(p){return p.images&&p.images.length?p.images:[p.img]}
+
+/* ---------- DASHBOARD ---------- */
+function dash(){
+ const s=DB.stats(),orders=DB.orders().slice(0,8);
+ const byCat={};DB.allProducts().forEach(p=>{const c=DB.category(p.categoryId);if(c)byCat[c.name]=(byCat[c.name]||0)+1});
+ const top=Object.entries(byCat).sort((a,b)=>b[1]-a[1]).slice(0,7),mx=Math.max(...top.map(t=>t[1]),1);
+ M.innerHTML=`<div class="hdr"><div><h2 class="h2">داشبورد مدیر</h2><div class="sub">نمای کلی فروشگاه — ${new Date().toLocaleDateString('fa-IR')}</div></div></div>
+ <div class="stats">
+  <div class="stat"><div class="l">کل محصولات</div><div class="v">${fa(s.products)}</div><div class="mini">${fa(s.active)} فعال</div></div>
+  <div class="stat"><div class="l">سفارش‌ها</div><div class="v" style="color:var(--acc2)">${fa(s.orders)}</div><div class="mini">${fa(s.newOrders)} سفارش جدید</div></div>
+  <div class="stat"><div class="l">مشتریان</div><div class="v" style="color:var(--pur)">${fa(s.customers)}</div></div>
+  <div class="stat"><div class="l">فروش کل</div><div class="v" style="color:var(--ok)">${fa(s.revenue)}</div><div class="mini">تومان</div></div>
+  <div class="stat"><div class="l">ارزش موجودی انبار</div><div class="v" style="color:var(--ok)">${fa(s.stockValue)}</div><div class="mini">تومان</div></div>
+  <div class="stat"><div class="l">کم‌موجود / ناموجود</div><div class="v" style="color:var(--warn)">${fa(s.low.length)} / ${fa(s.out.length)}</div></div>
+ </div>
+ <div style="display:grid;grid-template-columns:1.3fr .8fr;gap:16px;margin-top:18px" class="dashgrid">
+  <div class="card pad"><div class="tt"><h3>آخرین سفارش‌ها</h3><a onclick="location.hash='orders';location.reload()" class="mini" style="cursor:pointer">همه ←</a></div>
+   ${orders.length?`<div class="scroll"><table class="tbl"><thead><tr><th>شماره</th><th>مشتری</th><th>مبلغ</th><th>وضعیت</th><th>تاریخ</th></tr></thead><tbody>
+   ${orders.map(o=>{const st=DB.STATUSES.find(x=>x.id===o.status);
+    return `<tr><td style="direction:ltr">${o.number}</td><td>${o.customer.name}</td><td class="price">${fa(o.total)}</td>
+    <td><span class="tag ${st.color}">${st.name}</span></td><td class="mini">${new Date(o.createdAt).toLocaleDateString('fa-IR')}</td></tr>`}).join('')}
+   </tbody></table></div>`:'<div class="empty">هنوز سفارشی ثبت نشده. از سمت سایت یک خرید آزمایشی انجام دهید.</div>'}</div>
+  <div class="card pad"><div class="tt"><h3>محصولات بر اساس دسته</h3></div>
+   ${top.map(t=>`<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12.5px"><span>${t[0]}</span><span>${fa(t[1])}</span></div>
+    <div class="bar"><i style="width:${t[1]/mx*100}%"></i></div></div>`).join('')}</div>
+ </div>
+ ${s.low.length||s.out.length?`<div class="card pad" style="margin-top:16px"><div class="tt"><h3>⚠️ نیازمند توجه</h3></div>
+  <div class="scroll" style="max-height:260px"><table class="tbl"><thead><tr><th>محصول</th><th>موجودی</th><th></th></tr></thead><tbody>
+  ${[...s.out,...s.low].slice(0,12).map(p=>`<tr><td>${p.name}</td>
+   <td>${p.stock===0?'<span class="tag t-bad">ناموجود</span>':'<span class="tag t-warn">'+fa(p.stock)+' عدد</span>'}</td>
+   <td><button class="btn g sm" onclick="editProduct('${p.id}')">ویرایش</button></td></tr>`).join('')}</tbody></table></div></div>`:''}`;
+}
+/* ---------- PRODUCTS ---------- */
+let pq='',pfv='',pfc='';
+function products(){
+ let list=DB.allProducts();
+ if(pfv)list=list.filter(p=>p.vehicleId===pfv);
+ if(pfc)list=list.filter(p=>p.categoryId===pfc);
+ if(pq)list=list.filter(p=>(p.name+p.sku+p.brand+(p.oem||[]).join('')).toLowerCase().includes(pq.toLowerCase()));
+ M.innerHTML=`<div class="hdr"><div><h2 class="h2">مدیریت محصولات</h2><div class="sub">${fa(list.length)} محصول</div></div>
+  <button class="btn" onclick="editProduct()">➕ افزودن محصول</button></div>
+ <div class="card pad" style="margin-bottom:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+  <div><label>جستجو</label><input id="q" value="${pq}" placeholder="نام، SKU یا OEM"></div>
+  <div><label>خودرو</label><select id="fv"><option value="">همه</option>${DB.vehicles().map(v=>`<option value="${v.id}" ${pfv===v.id?'selected':''}>${v.brandFa} ${v.modelFa}</option>`).join('')}</select></div>
+  <div><label>دسته</label><select id="fc"><option value="">همه</option>${DB.categories().map(c=>`<option value="${c.id}" ${pfc===c.id?'selected':''}>${c.name}</option>`).join('')}</select></div>
+ </div>
+ <div class="card"><div class="scroll"><table class="tbl"><thead><tr><th>تصویر</th><th>نام محصول</th><th>SKU</th><th>برند</th><th>دسته</th><th>قیمت</th><th>موجودی</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>
+ ${list.slice(0,200).map(p=>`<tr><td><img alt="تصویر محصول یدک‌یار" src="${imgsOf(p)[0]}"></td>
+  <td style="max-width:260px">${p.name}<div class="mini">${(p.oem||[]).join(' · ')||'بدون OEM'}</div></td>
+  <td style="direction:ltr">${p.sku}</td><td>${p.brand}</td><td class="mini">${(DB.category(p.categoryId)||{}).name||'-'}</td>
+  <td><span class="inl" onclick="quickPrice('${p.id}')">${fa(p.price)}</span></td>
+  <td><span class="inl" style="color:var(--warn)" onclick="quickStock('${p.id}')">${fa(p.stock)}</span></td>
+  <td>${p.active===false?'<span class="tag t-bad">غیرفعال</span>':'<span class="tag t-ok">فعال</span>'}</td>
+  <td style="white-space:nowrap"><button class="btn g sm" onclick="editProduct('${p.id}')">✏️</button>
+   <button class="btn g sm" onclick="toggleActive('${p.id}')">${p.active===false?'✅':'⏸'}</button>
+   <button class="btn g sm" onclick="delProduct('${p.id}')">🗑</button></td></tr>`).join('')}
+ </tbody></table></div></div>
+ ${list.length>200?'<div class="mini" style="margin-top:8px">۲۰۰ مورد اول نمایش داده شد — از فیلترها استفاده کنید.</div>':''}`;
+ $('#q').oninput=e=>{pq=e.target.value;products()};
+ $('#fv').onchange=e=>{pfv=e.target.value;products()};
+ $('#fc').onchange=e=>{pfc=e.target.value;products()};
+}
+function quickPrice(id){const p=DB.product(id);const v=prompt('قیمت جدید (تومان) برای:\n'+p.name,p.price);
+ if(v===null)return;DB.upsert('products',{id,price:+en(v)||0});toast('قیمت به‌روز شد ✓');render()}
+function quickStock(id){const p=DB.product(id);const v=prompt('موجودی جدید:',p.stock);
+ if(v===null)return;DB.upsert('products',{id,stock:+en(v)||0});toast('موجودی به‌روز شد ✓');render()}
+function toggleActive(id){const p=DB.product(id)||DB.get('products',id);
+ DB.upsert('products',{id,active:p.active===false});render()}
+function delProduct(id){if(confirm('این محصول حذف شود؟')){DB.remove('products',id);toast('حذف شد');render()}}
+function editProduct(id){
+ const p=id?DB.get('products',id):{id:DB.nextProductId(),name:'',nameEn:'',sku:'',brand:'',manufacturer:'',
+  partId:DB.parts()[0].id,vehicleId:DB.vehicles()[0].id,categoryId:DB.categories()[0].id,
+  price:0,oldPrice:0,stock:0,oem:[],images:[],img:'assets/img/part-filter.jpg',grade:'شرکتی',gradeCode:'aftermarket',
+  years:[2015,2020],engines:[],warranty:'۶ ماه',desc:'',specs:{},sold:0,active:true,oemVerified:false,source:''};
+ modal(id?'ویرایش محصول':'افزودن محصول',`
+  <div class="row2"><div><label>نام محصول (فارسی) *</label><input id="e-name" value="${p.name}"></div>
+   <div><label>نام انگلیسی</label><input id="e-nameEn" value="${p.nameEn}" dir="ltr"></div></div>
+  <div class="row2"><div><label>کد کالا (SKU)</label><input id="e-sku" value="${p.sku}" dir="ltr"></div>
+   <div><label>شماره‌های OEM (با کاما جدا کنید)</label><input id="e-oem" value="${(p.oem||[]).join(', ')}" dir="ltr"></div></div>
+  <div class="row2"><div><label>برند / تولیدکننده</label><input id="e-brand" value="${p.brand}"></div>
+   <div><label>گرید</label><select id="e-grade">
+    <option value="original" ${p.gradeCode==='original'?'selected':''}>اصلی OEM</option>
+    <option value="aftermarket" ${p.gradeCode==='aftermarket'?'selected':''}>شرکتی</option>
+    <option value="economy" ${p.gradeCode==='economy'?'selected':''}>اقتصادی</option></select></div></div>
+  <div class="row2"><div><label>خودروی سازگار</label><select id="e-veh">${DB.vehicles().map(v=>`<option value="${v.id}" ${p.vehicleId===v.id?'selected':''}>${v.brandFa} ${v.modelFa}</option>`).join('')}</select></div>
+   <div><label>قطعه (اتصال به مدل سه‌بعدی)</label><select id="e-part">${DB.parts().map(x=>`<option value="${x.id}" ${p.partId===x.id?'selected':''}>${x.name}</option>`).join('')}</select></div></div>
+  <div class="row2"><div><label>دسته‌بندی</label><select id="e-cat">${DB.categories().map(c=>`<option value="${c.id}" ${p.categoryId===c.id?'selected':''}>${c.name}</option>`).join('')}</select></div>
+   <div><label>سال‌های سازگار (از - تا)</label><div style="display:flex;gap:6px">
+    <input id="e-y1" value="${p.years[0]}" dir="ltr"><input id="e-y2" value="${p.years[1]}" dir="ltr"></div></div></div>
+  <div class="row2"><div><label>قیمت (تومان) *</label><input id="e-price" value="${p.price}" dir="ltr"></div>
+   <div><label>قیمت قبل از تخفیف (۰ = بدون تخفیف)</label><input id="e-old" value="${p.oldPrice||0}" dir="ltr"></div></div>
+  <div class="row2"><div><label>موجودی انبار</label><input id="e-stock" value="${p.stock}" dir="ltr"></div>
+   <div><label>گارانتی</label><input id="e-war" value="${p.warranty||''}"></div></div>
+  <label>توضیحات</label><textarea id="e-desc">${p.desc||''}</textarea>
+  <label>منبع اطلاعات / شماره فنی</label><input id="e-src" value="${p.source||''}">
+  <label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="e-ver" style="width:auto" ${p.oemVerified?'checked':''}> شمارهٔ OEM تأیید شده است</label>
+  <label>تصاویر محصول</label>
+  <div class="imgbox" id="e-imgs"></div>
+  <div class="drop" id="e-drop">🖼️ برای آپلود تصویر کلیک کنید یا فایل را اینجا رها کنید (چند فایل مجاز است)</div>
+  <input type="file" id="e-file" accept="image/*" multiple hidden>
+  <button class="btn wide" style="margin-top:16px" id="e-save">${id?'ذخیرهٔ تغییرات':'افزودن محصول'}</button>`,820);
+ let imgs=[...imgsOf(p)];
+ const drawImgs=()=>{$('#e-imgs').innerHTML=imgs.map((s,i)=>`<div class="it ${i===0?'main':''}">
+   <img alt="تصویر محصول یدک‌یار" src="${s}" onclick="window._setMain(${i})" title="کلیک = تصویر اصلی">${i===0?'<b>اصلی</b>':''}
+   <button class="rm" onclick="window._rmImg(${i})">✕</button></div>`).join('')||'<span class="mini">تصویری ندارد</span>'};
+ window._setMain=i=>{const [x]=imgs.splice(i,1);imgs.unshift(x);drawImgs();toast('تصویر اصلی تغییر کرد')};
+ window._rmImg=i=>{imgs.splice(i,1);drawImgs()};
+ drawImgs();
+ $('#e-drop').onclick=()=>$('#e-file').click();
+ $('#e-drop').ondragover=e=>{e.preventDefault();$('#e-drop').style.borderColor='var(--acc)'};
+ $('#e-drop').ondrop=async e=>{e.preventDefault();for(const f of e.dataTransfer.files)if(f.type.startsWith('image/'))imgs.push(await img2b64(f));drawImgs()};
+ $('#e-file').onchange=async e=>{for(const f of e.target.files)imgs.push(await img2b64(f));drawImgs();toast('تصویر افزوده شد ✓')};
+ $('#e-save').onclick=()=>{
+  const name=$('#e-name').value.trim();if(!name){toast('نام محصول الزامی است',1);return}
+  const gc=$('#e-grade').value,v=DB.vehicle($('#e-veh').value),pt=DB.part($('#e-part').value);
+  const o={...p,name,nameEn:$('#e-nameEn').value.trim(),
+   sku:$('#e-sku').value.trim()||('AP-'+p.id),brand:$('#e-brand').value.trim()||'نامشخص',
+   manufacturer:$('#e-brand').value.trim(),gradeCode:gc,
+   grade:{original:'اصلی (OEM)',aftermarket:'شرکتی / برند معتبر',economy:'اقتصادی'}[gc],
+   vehicleId:v.id,partId:pt.id,categoryId:$('#e-cat').value,
+   years:[+en($('#e-y1').value)||2015,+en($('#e-y2').value)||2020],
+   price:+en($('#e-price').value)||0,oldPrice:+en($('#e-old').value)||0,
+   stock:+en($('#e-stock').value)||0,warranty:$('#e-war').value.trim(),
+   desc:$('#e-desc').value.trim(),source:$('#e-src').value.trim(),
+   oemVerified:$('#e-ver').checked,
+   oem:$('#e-oem').value.split(',').map(s=>s.trim()).filter(Boolean),
+   images:imgs,img:imgs[0]||'assets/img/part-filter.jpg',engines:v.engines,
+   specs:{...p.specs,'سازنده':$('#e-brand').value.trim(),'خودروی سازگار':v.brandFa+' '+v.modelFa,
+    'سال‌های سازگار':`${$('#e-y1').value} تا ${$('#e-y2').value}`,'موتور':v.engines.join('، ')},
+   active:p.active!==false};
+  DB.upsert('products',o);$('#ov').classList.remove('on');toast('ذخیره شد ✓');render()};
+}
+/* ---------- IMAGES ---------- */
+let iq='';
+function images(){
+ let list=DB.allProducts();if(iq)list=list.filter(p=>p.name.includes(iq)||p.sku.toLowerCase().includes(iq.toLowerCase()));
+ M.innerHTML=`<div class="hdr"><div><h2 class="h2">مدیریت تصاویر</h2>
+  <div class="sub">آپلود، حذف، تغییر تصویر اصلی و مرتب‌سازی تصاویر محصولات</div></div>
+  <input id="iq" value="${iq}" placeholder="جستجوی محصول…" style="max-width:280px"></div>
+ <div class="card"><div class="scroll"><table class="tbl"><thead><tr><th>محصول</th><th>تصاویر</th><th>عملیات</th></tr></thead><tbody>
+ ${list.slice(0,60).map(p=>`<tr><td style="max-width:230px">${p.name}<div class="mini">${p.sku}</div></td>
+  <td><div class="imgbox">${imgsOf(p).map((s,i)=>`<div class="it ${i===0?'main':''}">
+    <img alt="تصویر محصول یدک‌یار" src="${s}" onclick="setMainImg('${p.id}',${i})" title="کلیک = تصویر اصلی">${i===0?'<b>اصلی</b>':''}
+    <button class="rm" onclick="rmProdImg('${p.id}',${i})">✕</button></div>`).join('')}</div></td>
+  <td><button class="btn g sm" onclick="uploadFor('${p.id}')">⬆️ آپلود تصویر</button></td></tr>`).join('')}
+ </tbody></table></div></div>
+ <input type="file" id="gfile" accept="image/*" multiple hidden>
+ <div class="mini" style="margin-top:10px">💡 کلیک روی هر تصویر آن را «تصویر اصلی» می‌کند. تصاویر آپلودی به‌صورت Base64 در مرورگر ذخیره می‌شوند (در نسخهٔ سرور، در استوریج آپلود می‌شوند).</div>`;
+ $('#iq').oninput=e=>{iq=e.target.value;images()};
+}
+function setMainImg(id,i){const p=DB.get('products',id);const im=[...imgsOf(p)];const[x]=im.splice(i,1);im.unshift(x);
+ DB.upsert('products',{id,images:im,img:im[0]});toast('تصویر اصلی تغییر کرد ✓');render()}
+function rmProdImg(id,i){const p=DB.get('products',id);const im=[...imgsOf(p)];if(im.length<2){toast('حداقل یک تصویر لازم است',1);return}
+ im.splice(i,1);DB.upsert('products',{id,images:im,img:im[0]});render()}
+function uploadFor(id){const f=$('#gfile');f.onchange=async e=>{const p=DB.get('products',id);const im=[...imgsOf(p)];
+ for(const file of e.target.files)im.push(await img2b64(file));
+ DB.upsert('products',{id,images:im,img:im[0]});toast('تصویر افزوده شد ✓');render()};f.click()}
+/* ---------- PRICES ---------- */
+let prv='';
+function prices(){
+ let list=DB.allProducts();if(prv)list=list.filter(p=>p.vehicleId===prv);
+ M.innerHTML=`<div class="hdr"><div><h2 class="h2">مدیریت قیمت‌ها</h2><div class="sub">${DB.meta().priceNote||''}</div></div></div>
+ <div class="card pad" style="margin-bottom:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;align-items:end">
+  <div><label>خودرو</label><select id="v"><option value="">همه</option>${DB.vehicles().map(v=>`<option value="${v.id}" ${prv===v.id?'selected':''}>${v.brandFa} ${v.modelFa}</option>`).join('')}</select></div>
+  <div><label>تغییر گروهی قیمت (٪)</label><input id="pct" placeholder="مثلاً 10 یا -5" dir="ltr"></div>
+  <button class="btn" id="apply">اعمال روی ${fa(list.length)} محصول</button>
+ </div>
+ <div class="card"><div class="scroll"><table class="tbl"><thead><tr><th>محصول</th><th>قیمت فعلی</th><th>قیمت قبل تخفیف</th><th>موجودی</th><th>ذخیره</th></tr></thead><tbody>
+ ${list.slice(0,150).map(p=>`<tr data-id="${p.id}">
+  <td style="max-width:280px">${p.name}<div class="mini">${p.brand} · ${p.sku}</div></td>
+  <td><input class="np" value="${p.price}" dir="ltr" style="width:120px"></td>
+  <td><input class="no" value="${p.oldPrice||0}" dir="ltr" style="width:120px"></td>
+  <td><input class="ns" value="${p.stock}" dir="ltr" style="width:80px"></td>
+  <td><button class="btn sm" onclick="savePrice(this)">💾</button></td></tr>`).join('')}
+ </tbody></table></div></div>`;
+ $('#v').onchange=e=>{prv=e.target.value;prices()};
+ $('#apply').onclick=()=>{const pct=parseFloat(en($('#pct').value).replace(/^0+/,''))*(($('#pct').value+'').trim().startsWith('-')?-1:1);
+  if(!pct){toast('درصد را وارد کنید',1);return}
+  if(!confirm(`قیمت ${list.length} محصول ${pct}٪ تغییر کند؟`))return;
+  list.forEach(p=>DB.upsert('products',{id:p.id,price:Math.round(p.price*(1+pct/100)/1000)*1000}));
+  toast('قیمت‌ها به‌روز شد ✓');prices()};
+}
+function savePrice(btn){const tr=btn.closest('tr'),id=tr.dataset.id;
+ DB.upsert('products',{id,price:+en(tr.querySelector('.np').value)||0,
+  oldPrice:+en(tr.querySelector('.no').value)||0,stock:+en(tr.querySelector('.ns').value)||0});
+ toast('ذخیره شد ✓')}
+/* ---------- ORDERS ---------- */
+let ost='';
+function orders(){
+ let list=DB.orders();if(ost)list=list.filter(o=>o.status===ost);
+ M.innerHTML=`<div class="hdr"><div><h2 class="h2">مدیریت سفارش‌ها</h2><div class="sub">${fa(list.length)} سفارش</div></div>
+  <select id="st" style="max-width:220px"><option value="">همهٔ وضعیت‌ها</option>${DB.STATUSES.map(s=>`<option value="${s.id}" ${ost===s.id?'selected':''}>${s.name}</option>`).join('')}</select></div>
+ ${list.length?`<div class="card"><div class="scroll"><table class="tbl"><thead><tr><th>شماره</th><th>مشتری</th><th>تماس</th><th>اقلام</th><th>مبلغ</th><th>وضعیت</th><th>تاریخ</th><th></th></tr></thead><tbody>
+ ${list.map(o=>`<tr><td style="direction:ltr">${o.number}</td><td>${o.customer.name}</td>
+  <td class="mini" style="direction:ltr">${o.customer.phone}</td><td>${fa(o.items.length)}</td>
+  <td class="price">${fa(o.total)}</td>
+  <td><select onchange="chStatus('${o.id}',this.value)" style="min-width:150px">${DB.STATUSES.map(s=>`<option value="${s.id}" ${o.status===s.id?'selected':''}>${s.name}</option>`).join('')}</select></td>
+  <td class="mini">${new Date(o.createdAt).toLocaleDateString('fa-IR')}</td>
+  <td><button class="btn g sm" onclick="showOrder('${o.id}')">جزئیات</button></td></tr>`).join('')}
+ </tbody></table></div></div>`:'<div class="empty">سفارشی ثبت نشده است.</div>'}`;
+ $('#st').onchange=e=>{ost=e.target.value;orders()};
+}
+function chStatus(id,s){DB.setStatus(id,s);toast('وضعیت به‌روز شد ✓')}
+function showOrder(id){const o=DB.get('orders',id);
+ modal('سفارش '+o.number,`<div class="row2"><div class="card pad">
+  <b>مشتری</b><div>${o.customer.name} · ${o.customer.phone}</div>
+  <div class="mini">${o.address.prov}، ${o.address.city}<br>${o.address.addr}</div></div>
+  <div class="card pad"><b>صورتحساب</b><div class="mini">کالا: ${fa(o.subtotal)} + ارسال: ${fa(o.shipCost)}</div>
+  <div class="price" style="font-size:19px">${money(o.total)}</div></div></div>
+  <div class="scroll" style="margin-top:12px"><table class="tbl"><thead><tr><th></th><th>محصول</th><th>تعداد</th><th>جمع</th></tr></thead><tbody>
+  ${o.items.map(i=>`<tr><td><img alt="تصویر محصول یدک‌یار" src="${i.img}"></td><td>${i.name}</td><td>${fa(i.qty)}</td><td>${fa(i.price*i.qty)}</td></tr>`).join('')}</tbody></table></div>
+  <div style="margin-top:12px"><b>تاریخچهٔ وضعیت</b>${o.history.map(h=>`<div class="mini">• ${(DB.STATUSES.find(s=>s.id===h.s)||{}).name} — ${dt(h.t)}</div>`).join('')}</div>`,760)}
+/* ---------- CUSTOMERS ---------- */
+function customers(){
+ const cs=DB.all('customers'),os=DB.orders();
+ M.innerHTML=`<div class="hdr"><h2 class="h2">مشتریان</h2></div>
+ ${cs.length?`<div class="card"><div class="scroll"><table class="tbl"><thead><tr><th>نام</th><th>ایمیل</th><th>موبایل</th><th>سفارش‌ها</th><th>مجموع خرید</th><th>عضویت</th></tr></thead><tbody>
+ ${cs.map(c=>{const my=os.filter(o=>o.customerId===c.id);
+  return `<tr><td>${c.name}</td><td style="direction:ltr">${c.email}</td><td style="direction:ltr">${c.phone||'-'}</td>
+  <td>${fa(my.length)}</td><td class="price">${fa(my.reduce((s,o)=>s+o.total,0))}</td>
+  <td class="mini">${new Date(c.createdAt).toLocaleDateString('fa-IR')}</td></tr>`}).join('')}
+ </tbody></table></div></div>`:'<div class="empty">هنوز مشتری ثبت‌نام نکرده است.</div>'}`;
+}
+/* ---------- VEHICLES (3D) ---------- */
+function vehicles(){
+ M.innerHTML=`<div class="hdr"><div><h2 class="h2">مدیریت خودروهای سه‌بعدی</h2>
+  <div class="sub">افزودن خودرو، تصویر موتورخانه و تعیین محل قطعات روی نقشه</div></div>
+  <button class="btn" onclick="editVehicle()">➕ افزودن خودرو</button></div>
+ <div class="pgrid">${DB.vehicles().map(v=>`<div class="card" style="overflow:hidden">
+  <img alt="تصویر محصول یدک‌یار" src="${v.image}" style="height:130px;width:100%;object-fit:cover">
+  <div class="pad"><b>${v.brandFa} ${v.modelFa}</b>
+   <div class="mini">${fa(v.years[0])}–${fa(v.years[v.years.length-1])} · ${v.body} · ${v.origin}</div>
+   <div class="mini">${fa(v.hotspots.length)} نقطهٔ قطعه · ${fa(DB.productsFor(v.id).length)} محصول</div>
+   <div style="display:flex;gap:6px;margin-top:9px;flex-wrap:wrap">
+    <button class="btn g sm" onclick="editVehicle('${v.id}')">✏️ ویرایش</button>
+    <button class="btn g sm" onclick="editHotspots('${v.id}')">📍 نقاط قطعات</button>
+    <button class="btn g sm" onclick="delVehicle('${v.id}')">🗑</button></div></div></div>`).join('')}</div>`;
+}
+function delVehicle(id){if(!confirm('خودرو و ارتباط آن حذف شود؟'))return;DB.remove('vehicles',id);toast('حذف شد');render()}
+function editVehicle(id){
+ const v=id?DB.vehicle(id):{id:'v-'+Date.now(),brand:'',brandFa:'',model:'',modelFa:'',years:[2015,2020],
+  engines:[],origin:'چینی',image:'assets/img/car-suv.jpg',bay:'assets/img/bay-turbo.jpg',body:'SUV',color:'#dfe6ef',note:'',hotspots:[]};
+ modal(id?'ویرایش خودرو':'افزودن خودرو',`
+  <div class="row2"><div><label>برند (انگلیسی)</label><input id="v-b" value="${v.brand}" dir="ltr"></div>
+   <div><label>برند (فارسی)</label><input id="v-bf" value="${v.brandFa}"></div></div>
+  <div class="row2"><div><label>مدل (انگلیسی)</label><input id="v-m" value="${v.model}" dir="ltr"></div>
+   <div><label>مدل (فارسی)</label><input id="v-mf" value="${v.modelFa}"></div></div>
+  <div class="row2"><div><label>سال از</label><input id="v-y1" value="${v.years[0]}" dir="ltr"></div>
+   <div><label>سال تا</label><input id="v-y2" value="${v.years[v.years.length-1]}" dir="ltr"></div></div>
+  <div class="row2"><div><label>موتورها (با کاما)</label><input id="v-e" value="${v.engines.join(', ')}"></div>
+   <div><label>نوع بدنه</label><input id="v-body" value="${v.body}"></div></div>
+  <div class="row2"><div><label>بازار</label><select id="v-o">${['ایرانی','چینی','خارجی','آمریکایی'].map(o=>`<option ${v.origin===o?'selected':''}>${o}</option>`).join('')}</select></div>
+   <div><label>رنگ کاپوت (۳D)</label><input id="v-c" value="${v.color}" type="color" style="height:42px"></div></div>
+  <label>توضیح</label><input id="v-n" value="${v.note||''}">
+  <div class="row2" style="margin-top:8px">
+   <div><label>تصویر خودرو</label><img alt="تصویر محصول یدک‌یار" id="pv1" src="${v.image}" style="width:100%;height:110px;object-fit:cover;border-radius:12px;border:1px solid var(--bd)">
+    <button class="btn g sm wide" style="margin-top:6px" onclick="document.getElementById('f1').click()">⬆️ آپلود</button>
+    <input type="file" id="f1" accept="image/*" hidden></div>
+   <div><label>تصویر موتورخانه (نمای بالا)</label><img alt="تصویر محصول یدک‌یار" id="pv2" src="${v.bay}" style="width:100%;height:110px;object-fit:cover;border-radius:12px;border:1px solid var(--bd)">
+    <button class="btn g sm wide" style="margin-top:6px" onclick="document.getElementById('f2').click()">⬆️ آپلود</button>
+    <input type="file" id="f2" accept="image/*" hidden></div></div>
+  <button class="btn wide" style="margin-top:16px" id="v-save">ذخیره</button>`,760);
+ let im1=v.image,im2=v.bay;
+ $('#f1').onchange=async e=>{im1=await img2b64(e.target.files[0]);$('#pv1').src=im1};
+ $('#f2').onchange=async e=>{im2=await img2b64(e.target.files[0]);$('#pv2').src=im2};
+ $('#v-save').onclick=()=>{
+  const y1=+en($('#v-y1').value)||2015,y2=+en($('#v-y2').value)||2020;
+  const years=[];for(let y=y1;y<=y2;y++)years.push(y);
+  DB.upsert('vehicles',{...v,brand:$('#v-b').value.trim(),brandFa:$('#v-bf').value.trim(),
+   model:$('#v-m').value.trim(),modelFa:$('#v-mf').value.trim(),years,
+   engines:$('#v-e').value.split(',').map(s=>s.trim()).filter(Boolean),
+   body:$('#v-body').value.trim(),origin:$('#v-o').value,color:$('#v-c').value,
+   note:$('#v-n').value.trim(),image:im1,bay:im2});
+  $('#ov').classList.remove('on');toast('ذخیره شد ✓');render()};
+}
+function editHotspots(id){
+ const v=DB.vehicle(id);let hs=JSON.parse(JSON.stringify(v.hotspots));
+ modal('نقاط قطعات روی موتورخانهٔ '+v.modelFa,`
+  <div class="mini" style="margin-bottom:8px">روی تصویر کلیک کنید تا نقطهٔ جدید اضافه شود؛ نقاط را بکشید تا جابه‌جا شوند.</div>
+  <label>قطعه برای نقطهٔ جدید</label><select id="h-part">${DB.parts().map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select>
+  <div class="hsedit" id="hsw" style="margin-top:10px"><img alt="تصویر محصول یدک‌یار" src="${v.bay}"></div>
+  <div id="hlist" style="margin-top:10px"></div>
+  <button class="btn wide" style="margin-top:12px" id="h-save">ذخیرهٔ نقاط</button>`,760);
+ const w=$('#hsw');
+ const draw=()=>{$$('.pt',w).forEach(x=>x.remove());
+  hs.forEach((h,i)=>{const d=document.createElement('div');d.className='pt';d.style.right=h.x+'%';d.style.top=h.y+'%';
+   d.textContent=i+1;d.title=(DB.part(h.partId)||{}).name||'';w.appendChild(d);
+   d.onpointerdown=e=>{e.stopPropagation();d.setPointerCapture(e.pointerId);
+    const mv=ev=>{const r=w.getBoundingClientRect();
+     h.x=Math.max(1,Math.min(99,(r.right-ev.clientX)/r.width*100));
+     h.y=Math.max(1,Math.min(99,(ev.clientY-r.top)/r.height*100));
+     d.style.right=h.x+'%';d.style.top=h.y+'%'};
+    const up=()=>{w.removeEventListener('pointermove',mv);w.removeEventListener('pointerup',up);list()};
+    w.addEventListener('pointermove',mv);w.addEventListener('pointerup',up)}});
+  list()};
+ const list=()=>{$('#hlist').innerHTML=hs.map((h,i)=>`<div style="display:flex;gap:8px;align-items:center;font-size:12.5px;padding:4px 0;border-bottom:1px solid var(--bd)">
+   <b>${i+1}</b><span>${(DB.part(h.partId)||{}).name||'؟'}</span>
+   <span class="mini" style="margin-right:auto">x:${Math.round(h.x)}% y:${Math.round(h.y)}%</span>
+   <button class="btn g sm" onclick="window._rmHs(${i})">حذف</button></div>`).join('')||'<div class="mini">نقطه‌ای ثبت نشده</div>'};
+ window._rmHs=i=>{hs.splice(i,1);draw()};
+ w.onclick=e=>{if(e.target.classList.contains('pt'))return;const r=w.getBoundingClientRect();
+  hs.push({partId:$('#h-part').value,x:(r.right-e.clientX)/r.width*100,y:(e.clientY-r.top)/r.height*100});draw()};
+ draw();
+ $('#h-save').onclick=()=>{DB.upsert('vehicles',{id:v.id,hotspots:hs});$('#ov').classList.remove('on');toast('نقاط ذخیره شد ✓');render()};
+}
+/* ---------- CATEGORIES ---------- */
+function cats(){
+ M.innerHTML=`<div class="hdr"><div><h2 class="h2">دسته‌بندی‌ها و قطعات</h2>
+  <div class="sub">ساختار قابل توسعه — هر قطعه به یک دسته و یک سیستم خودرو متصل است</div></div>
+  <div style="display:flex;gap:8px"><button class="btn g" onclick="addCat()">➕ دسته</button><button class="btn" onclick="addPart()">➕ قطعه</button></div></div>
+ <div class="row2">
+ <div class="card pad"><div class="tt"><h3>دسته‌بندی‌ها</h3></div>
+  ${DB.categories().map(c=>`<div style="display:flex;gap:9px;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd)">
+   <img alt="تصویر محصول یدک‌یار" src="assets/img/part-${c.icon}.jpg" style="width:40px;height:30px;object-fit:cover;border-radius:8px">
+   <span style="font-size:13.5px">${c.name}</span>
+   <span class="mini" style="margin-right:auto">${fa(DB.allProducts().filter(p=>p.categoryId===c.id).length)} محصول</span>
+   <button class="btn g sm" onclick="delCat('${c.id}')">🗑</button></div>`).join('')}</div>
+ <div class="card pad"><div class="tt"><h3>قطعات (${fa(DB.parts().length)})</h3></div>
+  <div class="scroll" style="max-height:440px">${DB.parts().map(p=>`<div style="display:flex;gap:9px;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd)">
+   <span style="font-size:13px">${p.name}</span><span class="mini">${(DB.category(p.categoryId)||{}).name}</span>
+   <span class="mini" style="margin-right:auto">${p.system}</span></div>`).join('')}</div></div></div>`;
+}
+function addCat(){const n=prompt('نام دستهٔ جدید:');if(!n)return;
+ DB.upsert('categories',{id:'cat-'+Date.now(),name:n,icon:'filter'});toast('اضافه شد ✓');render()}
+function delCat(id){if(!confirm('حذف شود؟'))return;DB.remove('categories',id);render()}
+function addPart(){const n=prompt('نام قطعهٔ جدید:');if(!n)return;
+ const c=DB.categories()[0];
+ DB.upsert('parts',{id:'p-'+Date.now(),name:n,nameEn:'',categoryId:c.id,img:c.icon,system:'عمومی',desc:''});
+ toast('قطعه اضافه شد — از «مدیریت خودروها» محل آن را روی موتور تعیین کنید');render()}
+/* ---------- SETTINGS ---------- */
+function settings(){
+ const s=DB.settings();
+ M.innerHTML=`<div class="hdr"><h2 class="h2">تنظیمات</h2></div>
+ <div class="row2"><div class="card pad"><div class="tt"><h3>حساب مدیر</h3></div>
+  <label>نام کاربری</label><input id="s-u" value="${s.adminUser}">
+  <label>رمز عبور</label><input id="s-p" value="${s.adminPass}">
+  <label>نام فروشگاه</label><input id="s-n" value="${s.shopName}">
+  <label>سقف ارسال رایگان (تومان)</label><input id="s-f" value="${s.freeShipOver}" dir="ltr">
+  <button class="btn" style="margin-top:14px" id="s-save">ذخیره</button></div>
+ <div class="card pad"><div class="tt"><h3>روش‌های ارسال</h3></div>
+  ${s.shipping.map((x,i)=>`<div class="row2" style="margin-bottom:6px"><input class="sn" value="${x.name}"><input class="sp" value="${x.price}" dir="ltr"></div>`).join('')}
+  <button class="btn g" id="sh-save" style="margin-top:8px">ذخیرهٔ روش‌ها</button>
+  <div class="tt" style="margin-top:20px"><h3>داده‌ها</h3></div>
+  <button class="btn g wide" id="exp">⬇️ خروجی JSON کل داده‌ها</button>
+  <button class="btn bad wide" style="margin-top:8px" id="rst">♻️ بازنشانی کامل به دادهٔ اولیه</button>
+  <div class="mini" style="margin-top:8px">داده‌ها در localStorage مرورگر ذخیره می‌شوند. برای نسخهٔ واقعی، لایهٔ <code>db.js</code> را به API سرور متصل کنید.</div></div></div>
+
+ <div class="card pad" style="margin-top:16px"><div class="tt"><h3>🕐 به‌روزرسانی خودکار قیمت</h3>
+  <span class="mini" id="pu-state">در حال بررسی…</span></div>
+  <div class="row2">
+   <div><label>آدرس صفحهٔ منبع قیمت</label>
+    <input id="pu-url" dir="ltr" placeholder="https://example.ir/parts/price-list" value="${(s.priceUrl||'')}">
+    <label style="margin-top:10px">کلید تطبیق</label>
+    <select id="pu-match">
+      <option value="name">نام محصول</option><option value="oem">شمارهٔ OEM</option><option value="sku">کد کالا (SKU)</option>
+    </select></div>
+   <div><label>فاصلهٔ اجرا (دقیقه)</label><input id="pu-int" dir="ltr" value="${(s.priceInterval||60)}">
+    <label style="margin-top:10px">درصد سود روی قیمت مرجع</label><input id="pu-mrg" dir="ltr" value="${(s.priceMargin||0)}">
+    <label style="margin-top:10px" class="mini"><input type="checkbox" id="pu-on" ${s.priceEnabled?'checked':''}> فعال باشد</label></div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+   <button class="btn" id="pu-save">ذخیرهٔ تنظیمات</button>
+   <button class="btn g" id="pu-now">🔄 همگام‌سازی همین حالا</button>
+  </div>
+  <div id="pu-log" class="mini" style="margin-top:12px;line-height:2"></div>
+  <div class="mini" style="margin-top:10px;padding:10px;border-radius:10px;background:var(--acc-s);line-height:2">
+   ⚠️ اسکرپ قیمت از یک سایت دیگر <b>نیازمند سرویس سمت سرور</b> است (مرورگر به‌خاطر CORS اجازه ندارد).
+   اسکریپت <code>price_worker.py</code> در ریشهٔ پروژه همین کار را می‌کند؛ با دستور
+   <code dir="ltr">python3 price_worker.py</code> اجرا شود تا هر ساعت <code>assets/data/prices.json</code> را بسازد.
+   رعایت قوانین <code>robots.txt</code> و شرایط استفادهٔ سایت مرجع بر عهدهٔ شماست.
+  </div></div>`;
+ $('#s-save').onclick=()=>{DB.saveSettings({adminUser:$('#s-u').value.trim(),adminPass:$('#s-p').value,
+  shopName:$('#s-n').value.trim(),freeShipOver:+en($('#s-f').value)||0});toast('ذخیره شد ✓')};
+ $('#sh-save').onclick=()=>{const ns=$$('.sn').map((x,i)=>({...s.shipping[i],name:x.value,price:+en($$('.sp')[i].value)||0}));
+  DB.saveSettings({shipping:ns});toast('ذخیره شد ✓')};
+ $('#exp').onclick=()=>{const d={products:DB.allProducts(),vehicles:DB.vehicles(),parts:DB.parts(),
+   categories:DB.categories(),orders:DB.orders(),customers:DB.all('customers')};
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,1)],{type:'application/json'}));
+  a.download='yadakyar-data.json';a.click();toast('خروجی گرفته شد ✓')};
+ $('#rst').onclick=()=>{if(confirm('همهٔ تغییرات پاک و داده‌ها به حالت اولیه برگردد؟')){DB.reset();toast('بازنشانی شد');render()}};
+
+ // ---- به‌روزرسانی خودکار قیمت ----
+ $('#pu-match').value = s.priceMatch||'name';
+ const puLog=$('#pu-log');
+ fetch('assets/data/prices.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.json()).then(d=>{
+   $('#pu-state').textContent = d.status==='ok' ? `آخرین اجرا: ${d.updatedAt} — ${d.count} قیمت` :
+     d.status==='disabled' ? 'غیرفعال' : 'خطا: '+(d.message||d.status);
+   puLog.innerHTML = `<b>وضعیت فایل قیمت:</b> ${d.status} · منبع: <code dir="ltr">${d.source||'—'}</code>`
+     + (d.scanned?` · ${d.scanned} آیتم اسکن شد`:'');
+ }).catch(()=>{$('#pu-state').textContent='فایل قیمت هنوز ساخته نشده'});
+ $('#pu-save').onclick=()=>{DB.saveSettings({priceUrl:$('#pu-url').value.trim(),
+   priceInterval:+en($('#pu-int').value)||60, priceMargin:+en($('#pu-mrg').value)||0,
+   priceMatch:$('#pu-match').value, priceEnabled:$('#pu-on').checked});
+   toast('تنظیمات قیمت ذخیره شد ✓ — برای اعمال، price_worker.py را اجرا کنید')};
+ $('#pu-now').onclick=async()=>{const r=await DB.syncPrices();
+   toast(r.status==='ok'?`${r.count} قیمت به‌روز شد ✓`:'همگام‌سازی انجام نشد: '+(r.message||r.status));
+   if(r.status==='ok'&&r.count)render()};
+}

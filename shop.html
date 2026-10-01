@@ -1,0 +1,136 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>فروشگاه قطعات | یدک‌یار</title>
+<meta name="description" content="فروشگاه قطعات یدکی با فیلتر برند، قیمت، خودرو، سال، دسته‌بندی، سازنده، موجودی و شمارهٔ OEM.">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="یدک‌یار">
+<meta property="og:title" content="فروشگاه قطعات | یدک‌یار">
+<meta property="og:description" content="فروشگاه قطعات یدکی با فیلتر برند، قیمت، خودرو، سال، دسته‌بندی، سازنده، موجودی و شمارهٔ OEM.">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://example.com/shop.html">
+<link rel="alternate" hreflang="fa-IR" href="https://example.com/shop.html">
+<meta property="og:url" content="https://example.com/shop.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="assets/css/app.css?v=13">
+<style>
+.finder{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:11px;align-items:end}
+.layout{display:grid;grid-template-columns:262px 1fr;gap:18px;margin-top:18px}
+@media(max-width:980px){.layout{grid-template-columns:1fr}.side{position:static!important;max-height:none!important}}
+.side{position:sticky;top:78px;max-height:calc(100vh - 96px);overflow:auto}
+.side h4{font-size:12.5px;color:var(--mut);margin:14px 0 6px}.side h4:first-child{margin-top:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--soft);border:1px solid var(--bd);border-radius:9px;padding:5px 11px;font-size:12px;cursor:pointer;transition:.2s}
+.chip:hover{border-color:var(--acc)}.chip.on{background:var(--acc-s);border-color:var(--acc)}
+.rngrow{display:flex;gap:8px}.rngrow input{text-align:center;direction:ltr}
+.topbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+</style></head><body>
+<main class="wrap">
+ <section class="sect" style="padding-bottom:0">
+  <div class="card pad">
+   <div class="tt" style="margin-bottom:10px"><h3>ابتدا خودروی خود را انتخاب کنید</h3>
+    <a href="vehicles.html" class="muted">نمی‌دانید کدام قطعه؟ نمای سه‌بعدی ←</a></div>
+   <div class="finder">
+    <div><label>خودرو</label><select id="fv"></select></div>
+    <div><label>سال</label><select id="fy"></select></div>
+    <div><label>دستهٔ قطعه</label><select id="fc"></select></div>
+    <div><label>قطعه</label><select id="fp"></select></div>
+    <div><label>جستجوی متنی / OEM</label><input id="fq" placeholder="مثلاً 17801-0T030"></div>
+   </div>
+  </div>
+ </section>
+ <div class="layout">
+  <aside class="card pad side">
+   <h4>برند سازندهٔ قطعه</h4><select id="fb"></select>
+   <h4>کیفیت / گرید</h4>
+   <div class="chips" id="fg">
+    <span class="chip" data-g="genuine">اصلی کارخانه</span>
+    <span class="chip" data-g="oes">OES</span>
+    <span class="chip" data-g="quality">باکیفیت</span>
+    <span class="chip" data-g="economy">اقتصادی</span></div>
+   <h4>بازهٔ قیمت (تومان)</h4>
+   <div class="rngrow"><input id="fmin" placeholder="از"><input id="fmax" placeholder="تا"></div>
+   <div class="chips" style="margin-top:8px" id="fquick">
+    <span class="chip" data-a="0" data-b="1000000">زیر ۱ م</span>
+    <span class="chip" data-a="1000000" data-b="5000000">۱ – ۵ م</span>
+    <span class="chip" data-a="5000000" data-b="15000000">۵ – ۱۵ م</span>
+    <span class="chip" data-a="15000000" data-b="999999999">+۱۵ م</span></div>
+   <h4>موجودی</h4>
+   <label style="display:flex;gap:8px;align-items:center;color:var(--tx);font-size:13px">
+    <input type="checkbox" id="fs" style="width:auto"> فقط کالاهای موجود</label>
+   <button class="btn g wide" id="clr" style="margin-top:16px">پاک کردن فیلترها</button>
+  </aside>
+  <section>
+   <div class="topbar">
+    <div class="muted" id="cnt">—</div>
+    <div style="display:flex;gap:8px;align-items:center">
+     <span class="muted" style="font-size:12.5px">مرتب‌سازی:</span>
+     <select id="fsort" style="width:auto">
+      <option value="new">جدیدترین</option><option value="cheap">ارزان‌ترین</option>
+      <option value="exp">گران‌ترین</option><option value="pop">محبوب‌ترین</option></select></div>
+   </div>
+   <div class="pgrid" id="grid"></div>
+   <div class="empty" id="emp" style="display:none">محصولی با این فیلترها یافت نشد.</div>
+   <button class="btn g" id="more" style="margin:20px auto;display:none">نمایش بیشتر</button>
+  </section>
+ </div>
+</main>
+<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script><script src="assets/js/ui.js?v=13"></script>
+<script src="assets/js/assistant.js?v=13"></script>
+<script>
+mountChrome('shop');bindAdd();
+const F={vehicleId:qs('v'),categoryId:qs('cat'),partId:qs('part'),year:'',brand:'',grade:'',
+ min:'',max:'',inStock:false,sort:qs('sort')||'new',q:qs('q')};
+let shown=0,res=[];
+function fill(el,arr,label,val){el.innerHTML=`<option value="">${label}</option>`+
+ arr.map(a=>`<option value="${a[0]}" ${a[0]===val?'selected':''}>${a[1]}</option>`).join('')}
+function rebuild(){
+ fill($('#fv'),DB.vehicles().map(v=>[v.id,v.brandFa+' '+v.modelFa]),'همهٔ خودروها',F.vehicleId);
+ const v=DB.vehicle(F.vehicleId);
+ fill($('#fy'),v?v.years.map(y=>[y,fa(y)]):[],'همهٔ سال‌ها',F.year);
+ $('#fy').disabled=!v;
+ fill($('#fc'),DB.categories().map(c=>[c.id,c.name]),'همهٔ دسته‌ها',F.categoryId);
+ const pool=DB.products().filter(p=>(!F.vehicleId||p.vehicleId===F.vehicleId)&&(!F.categoryId||p.categoryId===F.categoryId));
+ const pids=[...new Set(pool.map(p=>p.partId))].map(DB.part.bind(DB)).filter(Boolean);
+ fill($('#fp'),pids.map(p=>[p.id,p.name]),'همهٔ قطعات',F.partId);
+ fill($('#fb'),[...new Map(pool.map(p=>[p.brand,(p.brandFa||p.brand)+' — '+p.brand])).entries()].sort((a,b)=>a[1].localeCompare(b[1],'fa')),'همهٔ برندها',F.brand);
+ $('#fq').value=F.q;$('#fsort').value=F.sort;$('#fmin').value=F.min;$('#fmax').value=F.max;$('#fs').checked=F.inStock;
+ $$('#fg .chip').forEach(c=>c.classList.toggle('on',c.dataset.g===F.grade));
+}
+function run(){
+ res=DB.search(F.q,F);shown=0;$('#grid').innerHTML='';
+ $('#cnt').innerHTML=`<b style="color:var(--tx)">${fa(res.length)}</b> محصول یافت شد`
+  +(F.vehicleId?` · سازگار با ${DB.vehicle(F.vehicleId).brandFa} ${DB.vehicle(F.vehicleId).modelFa}`:'')
+  +(F.partId?` · ${DB.part(F.partId).name}`:'');
+ $('#emp').style.display=res.length?'none':'block';page();
+ const u=new URLSearchParams();if(F.vehicleId)u.set('v',F.vehicleId);if(F.categoryId)u.set('cat',F.categoryId);
+ if(F.partId)u.set('part',F.partId);if(F.q)u.set('q',F.q);
+ history.replaceState({},'','shop.html'+(u.toString()?'?'+u:''));
+}
+function page(){const s=res.slice(shown,shown+24);
+ $('#grid').insertAdjacentHTML('beforeend',s.map(productCard).join(''));shown+=s.length;
+ $('#more').style.display=shown<res.length?'block':'none';
+ $('#more').textContent=`نمایش بیشتر (${fa(res.length-shown)} محصول دیگر)`}
+$('#more').onclick=page;
+$('#fv').onchange=e=>{F.vehicleId=e.target.value;F.year='';F.partId='';rebuild();run()};
+$('#fc').onchange=e=>{F.categoryId=e.target.value;F.partId='';rebuild();run()};
+['fy','fp','fb','fsort'].forEach(id=>$('#'+id).onchange=e=>{
+ F[{fy:'year',fp:'partId',fb:'brand',fsort:'sort'}[id]]=e.target.value;run()});
+$('#fq').oninput=e=>{F.q=e.target.value;run()};
+['fmin','fmax'].forEach(id=>$('#'+id).oninput=e=>{F[id==='fmin'?'min':'max']=en(e.target.value);
+ $$('#fquick .chip').forEach(c=>c.classList.remove('on'));run()});
+$('#fs').onchange=e=>{F.inStock=e.target.checked;run()};
+$('#fg').onclick=e=>{const c=e.target.closest('[data-g]');if(!c)return;
+ F.grade=c.classList.contains('on')?'':c.dataset.g;
+ $$('#fg .chip').forEach(x=>x.classList.toggle('on',x.dataset.g===F.grade));run()};
+$('#fquick').onclick=e=>{const c=e.target.closest('[data-a]');if(!c)return;
+ const on=c.classList.contains('on');$$('#fquick .chip').forEach(x=>x.classList.remove('on'));
+ if(on){F.min='';F.max=''}else{c.classList.add('on');F.min=c.dataset.a;F.max=c.dataset.b}
+ $('#fmin').value=F.min;$('#fmax').value=F.max;run()};
+$('#clr').onclick=()=>{Object.assign(F,{vehicleId:'',categoryId:'',partId:'',year:'',brand:'',grade:'',min:'',max:'',inStock:false,sort:'new',q:''});
+ $$('.chip').forEach(c=>c.classList.remove('on'));rebuild();run()};
+rebuild();run();
+</script></body></html>

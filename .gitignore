@@ -1,0 +1,18 @@
+# داده و خروجی ورکر قیمت (محلی، نباید نسخه‌بندی شود)
+price_config.json
+assets/data/price-log.json
+price.log
+nohup.out
+
+# پایتون
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# سیستم‌عامل و ویرایشگر
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

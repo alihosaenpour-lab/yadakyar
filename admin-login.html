@@ -1,0 +1,44 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>ورود مدیر | یدک‌یار</title>
+<meta name="description" content="ورود مدیران پلتفرم یدک‌یار.">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="یدک‌یار">
+<meta property="og:title" content="ورود مدیر | یدک‌یار">
+<meta property="og:description" content="ورود مدیران پلتفرم یدک‌یار.">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
+
+<link rel="stylesheet" href="assets/css/app.css?v=13">
+<style>
+body{display:grid;place-items:center;min-height:100vh;padding:20px}
+.box{width:100%;max-width:400px;background:#fff;border:1px solid var(--bd);border-radius:26px;padding:34px 30px;box-shadow:var(--sh3);position:relative;overflow:hidden}
+.box::before{content:"";position:absolute;inset:0;height:5px;background:linear-gradient(90deg,var(--acc),var(--acc2),var(--pur));border-radius:26px 26px 0 0}
+@keyframes rot{to{transform:rotate(360deg)}}
+.shield{width:64px;height:64px;margin:0 auto 12px;border-radius:20px;display:grid;place-items:center;font-size:28px;
+ background:linear-gradient(140deg,var(--nav),var(--acc));color:#fff;box-shadow:0 8px 20px rgba(29,78,216,.28)}
+.tiny{text-align:center;color:var(--mut);font-size:12px;margin-top:16px}
+</style></head><body>
+<div class="bgfx"></div><div class="gridfx"></div>
+<div class="box">
+ <div class="shield">🛡️</div>
+ <h2 style="text-align:center;font-size:20px">ورود مدیر</h2>
+ <p style="text-align:center;color:var(--mut);font-size:12.5px">این بخش جدا از حساب مشتریان است و فقط برای مدیران مجاز فعال می‌باشد.</p>
+ <label>نام کاربری</label><input id="u" autocomplete="off" placeholder="admin">
+ <label>رمز عبور</label><input id="p" type="password" placeholder="••••••••">
+ <button class="btn wide" style="margin-top:16px" id="go">ورود به پنل</button>
+ <a href="home.html"><button class="btn g wide" style="margin-top:8px">بازگشت به سایت</button></a>
+ <div class="tiny">نسخهٔ نمایشی — نام کاربری <b style="color:var(--acc2)">admin</b> و رمز <b style="color:var(--acc2)">admin123</b><br>
+ (از پنل مدیریت ← تنظیمات قابل تغییر است)</div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="assets/js/seed.js?v=13"></script><script src="assets/js/db.js?v=13"></script><script src="assets/js/ui.js?v=13"></script>
+<script>
+if(DB.isAdmin())location.href='admin.html';
+const go=()=>{if(DB.adminLogin($('#u').value.trim(),$('#p').value)){toast('خوش آمدید ✓');setTimeout(()=>location.href='admin.html',500)}
+ else toast('نام کاربری یا رمز عبور اشتباه است',1)};
+$('#go').onclick=go;
+$('#p').addEventListener('keydown',e=>{if(e.key==='Enter')go()});
+</script></body></html>

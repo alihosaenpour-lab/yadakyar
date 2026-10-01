@@ -1,0 +1,240 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>یدک‌یار | پلتفرم جامع قطعات خودرو</title>
+<meta name="description" content="یدک‌یار — پلتفرم جامع قطعات خودرو با نمایش سه‌بعدی؛ خرید قطعات اصلی و باکیفیت برای جک S5، هیوندای النترا و تویوتا کرولا.">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="یدک‌یار">
+<meta property="og:title" content="یدک‌یار | پلتفرم جامع قطعات خودرو">
+<meta property="og:description" content="یدک‌یار — پلتفرم جامع قطعات خودرو با نمایش سه‌بعدی؛ خرید قطعات اصلی و باکیفیت برای جک S5، هیوندای النترا و تویوتا کرولا.">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://example.com/index.html">
+<link rel="alternate" hreflang="fa-IR" href="https://example.com/index.html">
+<meta property="og:url" content="https://example.com/index.html">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="manifest" href="site.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2719%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27sans-serif%27%3E%D9%8A%3C/text%3E%3C/svg%3E">
+
+<style>
+@font-face{font-family:Vazirmatn;src:url('assets/fonts/vazir-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url('assets/fonts/vazir-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url('assets/fonts/vazir-700.woff2') format('woff2');font-weight:700;font-display:swap}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden;background:#05090f;
+  font-family:Vazirmatn,system-ui,sans-serif;font-size:15.5px;color:#e8f0ff;-webkit-font-smoothing:antialiased}
+#stage{position:fixed;inset:0;background:radial-gradient(1400px 800px at 50% 18%,#16243c 0%,#0a1220 48%,#05090f 100%)}
+
+/* صحنهٔ ۳۶۰ */
+#spin{position:absolute;inset:0;display:grid;place-items:center;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+#spin.drag{cursor:grabbing}
+#frames{position:relative;width:min(96vw,1180px);aspect-ratio:3/2;max-height:78vh}
+#frames img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .13s linear;
+  -webkit-user-drag:none;pointer-events:none;filter:drop-shadow(0 30px 60px rgba(0,0,0,.55))}
+#frames img.on{opacity:1}
+.lay{position:absolute;inset:0;pointer-events:none}
+.grid{background-image:linear-gradient(rgba(120,170,255,.45) 1px,transparent 1px),linear-gradient(90deg,rgba(120,170,255,.45) 1px,transparent 1px);
+  background-size:74px 74px;opacity:.10;-webkit-mask-image:radial-gradient(72% 62% at 50% 50%,#000,transparent);mask-image:radial-gradient(72% 62% at 50% 50%,#000,transparent)}
+.vig{background:radial-gradient(1050px 700px at 50% 45%,transparent 42%,rgba(3,6,13,.8) 100%)}
+
+/* برند */
+.brand{position:absolute;top:30px;inset-inline-end:38px;display:flex;align-items:center;gap:13px;z-index:6}
+.mk{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;perspective:140px;
+  background:linear-gradient(140deg,#2563eb,#0891b2);box-shadow:0 14px 38px rgba(37,99,235,.55)}
+.mk i{display:block;width:20px;height:20px;position:relative;transform-style:preserve-3d;animation:sp 14s linear infinite}
+.mk s{position:absolute;inset:0;border:1.5px solid rgba(255,255,255,.88);border-radius:3px;background:rgba(255,255,255,.13)}
+.mk s:nth-child(1){transform:translateZ(10px)}.mk s:nth-child(2){transform:rotateY(180deg) translateZ(10px)}
+.mk s:nth-child(3){transform:rotateY(90deg) translateZ(10px)}.mk s:nth-child(4){transform:rotateY(-90deg) translateZ(10px)}
+.mk s:nth-child(5){transform:rotateX(90deg) translateZ(10px)}.mk s:nth-child(6){transform:rotateX(-90deg) translateZ(10px)}
+@keyframes sp{to{transform:rotateX(360deg) rotateY(360deg)}}
+.brand b{display:block;font-size:23px;line-height:1.3;color:#fff;letter-spacing:-.4px}
+.brand small{display:block;font-size:12px;color:#9dbaea;font-weight:400}
+
+/* کنترل‌ها */
+.hud{position:absolute;top:34px;inset-inline-start:38px;z-index:6;display:flex;gap:8px;flex-wrap:wrap;max-width:58vw}
+.hud button{font:inherit;font-size:13px;font-weight:500;padding:10px 16px;border-radius:13px;cursor:pointer;
+  border:1px solid rgba(150,190,255,.26);background:rgba(10,20,40,.55);color:#d6e6ff;
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:.18s}
+.hud button:hover{background:rgba(37,99,235,.45);border-color:rgba(160,200,255,.6);transform:translateY(-2px)}
+.hud button.on{background:linear-gradient(135deg,#2563eb,#0891b2);border-color:#6aa6ff;color:#fff;box-shadow:0 8px 22px rgba(37,99,235,.45)}
+
+.badge{position:absolute;top:104px;inset-inline-end:38px;z-index:6;display:flex;align-items:center;gap:8px;
+  font-size:12.5px;color:#a8c6f2;padding:8px 14px;border-radius:999px;
+  border:1px solid rgba(150,190,255,.22);background:rgba(10,20,40,.5);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.dot{width:7px;height:7px;border-radius:50%;background:#22d3ee;box-shadow:0 0 10px #22d3ee;animation:pl 1.8s ease-in-out infinite}
+@keyframes pl{50%{opacity:.35}}
+
+/* نوار زاویه */
+.dial{position:absolute;z-index:6;inset-inline:0;bottom:270px;display:flex;justify-content:center;gap:7px;pointer-events:none}
+.dial i{width:26px;height:4px;border-radius:3px;background:rgba(150,190,255,.22);transition:.2s}
+.dial i.on{background:linear-gradient(90deg,#3b82f6,#22d3ee);width:38px;box-shadow:0 0 12px rgba(59,130,246,.8)}
+
+/* پنل پایین */
+.copy{position:absolute;inset-inline:0;bottom:0;z-index:6;text-align:center;padding:80px 22px 36px;
+  background:linear-gradient(to top,rgba(4,8,16,.96) 24%,rgba(4,8,16,.6) 60%,transparent)}
+.copy h1{margin:0 0 12px;font-size:clamp(25px,3.9vw,46px);line-height:1.55;font-weight:700;color:#fff;letter-spacing:-.6px;
+  opacity:0;transform:translateY(22px);animation:up .9s .15s cubic-bezier(.2,.8,.2,1) forwards}
+.copy h1 em{font-style:normal;background:linear-gradient(90deg,#60a5fa,#22d3ee 60%,#a78bfa);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.copy p{margin:0 auto 22px;max-width:640px;font-size:15.5px;line-height:2.05;color:#a7c1e6;
+  opacity:0;transform:translateY(18px);animation:up .9s .32s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes up{to{opacity:1;transform:none}}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;opacity:0;transform:translateY(16px);animation:up .9s .5s cubic-bezier(.2,.8,.2,1) forwards}
+.enter{display:inline-flex;align-items:center;gap:10px;font:inherit;font-size:18px;font-weight:700;
+  padding:16px 50px;border:0;border-radius:18px;cursor:pointer;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#2563eb,#0891b2);box-shadow:0 18px 48px rgba(37,99,235,.55);transition:.2s}
+.enter:hover{transform:translateY(-3px);box-shadow:0 26px 62px rgba(37,99,235,.72)}
+.enter::after{content:"";position:absolute;inset:0;transform:translateX(-130%);
+  background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.42) 50%,transparent 65%);animation:sh 3.6s ease-in-out infinite}
+@keyframes sh{0%,60%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+.ghost{font:inherit;font-size:15px;font-weight:500;padding:16px 28px;border-radius:18px;cursor:pointer;text-decoration:none;
+  border:1px solid rgba(150,190,255,.3);background:rgba(12,22,42,.5);color:#cfe1ff;transition:.18s;display:inline-flex;align-items:center}
+.ghost:hover{background:rgba(37,99,235,.35);transform:translateY(-2px)}
+.stats{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin-top:22px;opacity:0;animation:up .9s .68s forwards}
+.stats b{display:block;font-size:20px;color:#fff;line-height:1.5}
+.stats span{font-size:12px;color:#7f9ac4}
+
+#load{position:absolute;inset:0;z-index:10;display:grid;place-items:center;background:#05090f;transition:opacity .6s;text-align:center}
+#load.off{opacity:0;pointer-events:none}
+.spin{width:50px;height:50px;border:3px solid rgba(120,170,255,.18);border-top-color:#3b82f6;border-radius:50%;animation:rot .9s linear infinite;margin:0 auto 16px}
+@keyframes rot{to{transform:rotate(360deg)}}
+#load small{color:#89a9d8;font-size:13px;display:block;margin-top:6px}
+
+@media(max-width:860px){
+  .brand{top:14px;inset-inline-end:14px}.brand b{font-size:18px}.mk{width:38px;height:38px}
+  .badge{display:none}.dial{bottom:auto;top:76px}
+  .hud{top:auto;bottom:calc(100% - 100vh + 296px);inset-inline-start:50%;transform:translateX(50%);justify-content:center;max-width:94vw}
+  #frames{max-height:46vh}.copy{padding:56px 14px 22px}
+  .enter,.ghost{width:100%;justify-content:center}.stats{gap:16px}
+}
+</style><script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"Organization","@id":"https://example.com/#org","name":"یدک‌یار","alternateName":"Yadakyar",
+ "url":"https://example.com/","description":"پلتفرم جامع قطعات خودرو",
+ "areaServed":{"@type":"Country","name":"Iran"}},
+{"@type":"WebSite","@id":"https://example.com/#site","url":"https://example.com/","name":"یدک‌یار","inLanguage":"fa-IR",
+ "publisher":{"@id":"https://example.com/#org"},
+ "potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint",
+   "urlTemplate":"https://example.com/shop.html?q={search_term_string}"},"query-input":"required name=search_term_string"}},
+{"@type":"Store","name":"یدک‌یار","url":"https://example.com/","image":"https://example.com/assets/img/spin/f00.jpg",
+ "description":"فروش قطعات یدکی جک S5، هیوندای النترا و تویوتا کرولا در چهار سطح کیفی: اصلی، OES، باکیفیت و اقتصادی.",
+ "currenciesAccepted":"IRR","paymentAccepted":"کارت بانکی، پرداخت در محل"}
+]}</script>
+</head><body>
+<div id="stage">
+  <div id="spin"><div id="frames"></div></div>
+  <div class="lay grid"></div><div class="lay vig"></div>
+
+  <div class="brand"><span class="mk"><i><s></s><s></s><s></s><s></s><s></s><s></s></i></span>
+    <span><b>یدک‌یار</b><small>پلتفرم جامع قطعات خودرو</small></span></div>
+
+  <div class="badge"><span class="dot"></span> نمایش ۳۶۰ درجه — بکشید تا بچرخد</div>
+
+  <div class="hud">
+    <button id="bBay">🔧 باز کردن کاپوت</button>
+    <button id="bRot" class="on">⟳ چرخش خودکار</button>
+    <button id="bPrev">‹ زاویهٔ قبل</button>
+    <button id="bNext">زاویهٔ بعد ›</button>
+  </div>
+
+  <div class="dial" id="dial"></div>
+
+  <div class="copy">
+    <h1>قطعهٔ خودرویت را <em>۳۶۰ درجه</em> ببین، مطمئن بخر</h1>
+    <p>خودرو را با کشیدن ماوس دور تا دور بچرخانید و کاپوت را باز کنید — سپس همان قطعه را با شمارهٔ فنی و OEM اصل سفارش دهید.</p>
+    <div class="cta">
+      <button class="enter" id="enter">ورود به سایت ←</button>
+      <a class="ghost" href="vehicles.html">نمایشگاه خودروها</a>
+    </div>
+    <div class="stats">
+      <div><b>۳</b><span>خودروی پشتیبانی‌شده</span></div>
+      <div><b>۲۱۲</b><span>محصول فعال</span></div>
+      <div><b>۳۳</b><span>قطعهٔ شناسایی‌شده</span></div>
+      <div><b>OEM</b><span>کد فنی اصل</span></div>
+    </div>
+  </div>
+
+  <div id="load"><div><div class="spin"></div>در حال بارگذاری نمای ۳۶۰ درجه…<small id="lmsg">۰ از ۹</small></div></div>
+</div>
+
+<script>
+(function () {
+  const N = 8, V = 'v=1';
+  const SRC = Array.from({ length: N }, (_, i) => `assets/img/spin/f0${i}.jpg?${V}`);
+  const BAY = `assets/img/spin/bay.jpg?${V}`;
+  const frames = document.getElementById('frames'), dial = document.getElementById('dial');
+  const imgs = [], load = document.getElementById('load'), lmsg = document.getElementById('lmsg');
+  let idx = 0, bay = false, auto = true, done = 0;
+
+  [...SRC, BAY].forEach((src, i) => {
+    const im = new Image();
+    im.src = src; im.alt = i < N ? `نمای ${i * 45} درجه` : 'موتورخانه';
+    im.onload = im.onerror = () => { done++; lmsg.textContent = `${done} از ${N + 1}`; if (done === N + 1) start(); };
+    frames.appendChild(im); imgs.push(im);
+    if (i < N) { const d = document.createElement('i'); dial.appendChild(d); }
+  });
+
+  const dots = () => dial.children;
+  function show() {
+    imgs.forEach((im, i) => im.classList.toggle('on', bay ? i === N : i === idx));
+    for (let i = 0; i < N; i++) dots()[i].classList.toggle('on', !bay && i === idx);
+  }
+  function step(d) { idx = (idx + d + N) % N; bay = false; syncBay(); show(); }
+  function syncBay() {
+    const b = document.getElementById('bBay');
+    b.textContent = bay ? '🔻 بستن کاپوت' : '🔧 باز کردن کاپوت';
+    b.classList.toggle('on', bay);
+  }
+
+  function start() {
+    load.classList.add('off'); show();
+    let timer = setInterval(() => { if (auto && !bay && !dragging) step(1); }, 900);
+
+    const st = document.getElementById('spin');
+    let dragging = false, x0 = 0, i0 = 0;
+    const px = e => (e.touches ? e.touches[0].clientX : e.clientX);
+    const down = e => { dragging = true; x0 = px(e); i0 = idx; st.classList.add('drag'); bay = false; syncBay(); };
+    const move = e => {
+      if (!dragging) return;
+      const per = Math.max(28, st.clientWidth / (N * 1.6));
+      const d = Math.round((x0 - px(e)) / per);
+      const ni = ((i0 + d) % N + N) % N;
+      if (ni !== idx) { idx = ni; show(); }
+      if (e.cancelable) e.preventDefault();
+    };
+    const up = () => { dragging = false; st.classList.remove('drag'); };
+    st.addEventListener('mousedown', down); addEventListener('mousemove', move); addEventListener('mouseup', up);
+    st.addEventListener('touchstart', down, { passive: true });
+    st.addEventListener('touchmove', move, { passive: false });
+    addEventListener('touchend', up);
+
+    document.getElementById('bPrev').onclick = () => step(-1);
+    document.getElementById('bNext').onclick = () => step(1);
+    document.getElementById('bBay').onclick = () => { bay = !bay; syncBay(); show(); };
+    document.getElementById('bRot').onclick = e => { auto = !auto; e.currentTarget.classList.toggle('on', auto); };
+    addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') step(1);
+      else if (e.key === 'ArrowRight') step(-1);
+      else if (e.key === 'Enter') go();
+    });
+    setTimeout(() => { if (!bay) document.getElementById('bBay').click(); }, 8000);
+  }
+
+  const go = () => location.href = 'home.html';
+  document.getElementById('enter').onclick = go;
+})();
+</script><noscript><div style="max-width:860px;margin:0 auto;padding:40px 22px;overflow:auto;height:100%">
+<h1>یدک‌یار — پلتفرم جامع قطعات خودرو</h1>
+<p>خرید آنلاین قطعات یدکی برای <b>جک S5</b>، <b>هیوندای النترا</b> و <b>تویوتا کرولا</b>؛ بیش از ۳۸۰ کالا در چهار سطح کیفی: اصلی کارخانه، OES، باکیفیت و اقتصادی، همراه با شمارهٔ فنی OEM و گارانتی.</p>
+<h2>بخش‌های سایت</h2>
+<ul>
+<li><a href="home.html">صفحهٔ اصلی و نمای سه‌بعدی موتور</a></li>
+<li><a href="shop.html">فروشگاه و فیلتر قطعات</a></li>
+<li><a href="vehicles.html">خودروهای پشتیبانی‌شده</a></li>
+<li><a href="order.html">پیگیری سفارش</a></li>
+<li><a href="account.html">حساب کاربری</a></li>
+</ul>
+<h2>دسته‌بندی قطعات</h2>
+<p>موتور، خنک‌کننده، سوخت‌رسانی، ترمز، تعلیق، فرمان، برق و باتری، انتقال قدرت، بدنه، داخلی و قطعات مصرفی.</p>
+<p><a href="home.html">ورود به سایت</a></p>
+</div></noscript></body></html>

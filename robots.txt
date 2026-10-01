@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin-login.html
+Disallow: /checkout.html
+Disallow: /cart.html
+Disallow: /account.html
+Disallow: /price_config.json
+Disallow: /assets/data/
+
+User-agent: Googlebot
+Allow: /assets/img/
+Allow: /assets/css/
+Allow: /assets/js/
+
+Sitemap: https://example.com/sitemap.xml
