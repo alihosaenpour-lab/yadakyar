@@ -6,11 +6,11 @@
 GitHub Pages / Cloudflare Pages / Netlify آپلود کنید.
 
 ## ۱) جایگزینی دامنه (مهم)
-همه‌جا فعلاً `https://example.com` نوشته شده. با دامنهٔ واقعی جایگزین کنید:
+همه‌جا فعلاً `https://alihosaenpour-lab.github.io/yadakyar` نوشته شده. با دامنهٔ واقعی جایگزین کنید:
 
 ```bash
 cd site
-grep -rl "https://example.com" . | xargs sed -i 's#https://example.com#https://YOUR-DOMAIN.ir#g'
+grep -rl "https://alihosaenpour-lab.github.io/yadakyar" . | xargs sed -i 's#https://alihosaenpour-lab.github.io/yadakyar#https://YOUR-DOMAIN.ir#g'
 ```
 این دستور `robots.txt`، `sitemap.xml` و تگ‌های canonical/og:url همهٔ صفحات را یکجا اصلاح می‌کند.
 

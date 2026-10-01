@@ -13,4 +13,4 @@ Allow: /assets/img/
 Allow: /assets/css/
 Allow: /assets/js/
 
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://alihosaenpour-lab.github.io/yadakyar/sitemap.xml

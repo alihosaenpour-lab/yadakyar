@@ -40,7 +40,7 @@ npx wrangler pages deploy . --project-name yadakyar
 ۲. دامنهٔ واقعی را جایگزین `example.com` کنید (روی canonical، sitemap و robots اثر دارد):
 ```bash
 cd site
-grep -rl "https://example.com" . | xargs sed -i 's#https://example.com#https://yadakyar.ir#g'
+grep -rl "https://alihosaenpour-lab.github.io/yadakyar" . | xargs sed -i 's#https://alihosaenpour-lab.github.io/yadakyar#https://yadakyar.ir#g'
 ```
 
 ---
