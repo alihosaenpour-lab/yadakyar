@@ -60,6 +60,7 @@ python3 -u server.py          # http://localhost:8080
 ## راهنماها
 
 - **[DEPLOY.md](DEPLOY.md)** — آپلود روی هاست، HTTPS، cron موتور قیمت، و فهرست صادقانهٔ آنچه برای فروش واقعی کم است
+- **[LIARA.md](LIARA.md)** — استقرار بک‌اند واقعی روی لیارا، مرحله به مرحله
 - **[SEO-GOOGLE.md](SEO-GOOGLE.md)** — تأیید در Search Console و ثبت نقشهٔ سایت
 
 ## صداقت داده‌ها
