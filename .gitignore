@@ -16,3 +16,8 @@ Thumbs.db
 *.swp
 .idea/
 .vscode/
+
+# هیچ‌وقت توکن یا اعتبارنامه کامیت نشود
+*.token
+.env
+.env.*
